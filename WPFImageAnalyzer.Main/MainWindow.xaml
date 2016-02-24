@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     KeyDown="OnKeyDown"
     Title="WPFImageAnalyzer" Height="600" Width="1200">
-    <Grid>
+    <Grid Margin="10,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height ="*" />
             <RowDefinition Height="Auto" MinHeight="16" />
@@ -17,7 +17,7 @@
                     Grid.Row="0"
                     ClipToBounds = "False"  
                     IsHitTestVisible="false"
-                    RenderOptions.EdgeMode="Aliased">
+                    RenderOptions.EdgeMode="Aliased" Margin="501,0,0,0">
             <Viewport3D.Camera>
                 <OrthographicCamera x:Name="camera" Width="2"
                     FarPlaneDistance="10"
@@ -51,7 +51,7 @@
                 Background="Transparent" 
                 MouseUp="OnViewportMouseUp"  
                 MouseDown="OnViewportMouseDown"  
-                MouseMove="OnViewportMouseMove" Margin="0,0,0,0">
+                MouseMove="OnViewportMouseMove" Margin="511,0,0,0">
         </Canvas>
 
         <TextBlock x:Name ="statusPane" 
@@ -97,8 +97,9 @@
             </GroupBox>
         </Canvas>
 
-        <Image Margin="12,12,16,71" Name="imgPhoto" 
-        Stretch="Fill" Grid.Column="1" />
+        <Image Margin="12,12,511,71" Name="imgPhoto" 
+        Stretch="None" Grid.Column="1" MouseDown ="imgPhoto_MouseDown" 
+               MouseUp="imgPhoto_MouseUp"/>
         <Button Height="23" HorizontalAlignment="Left" 
         Margin="12,0,0,34" Name="btnLoad" VerticalAlignment="Bottom" 
         Width="75" Grid.Column="1" Click="btnLoad_Click">_Load</Button>

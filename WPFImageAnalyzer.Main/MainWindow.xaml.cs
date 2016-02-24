@@ -12,9 +12,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System;
+using System.Windows.Media.Imaging;
 using System.Collections;
 using Microsoft.Win32;
-using System.Windows.Media.Imaging;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace WPFChart3D
 {
@@ -350,6 +352,44 @@ namespace WPFChart3D
             Transform3DGroup group1 = visual3d.Content.Transform as Transform3DGroup;
             group1.Children.Clear();
             group1.Children.Add(new MatrixTransform3D(m_transformMatrix.m_totalMatrix));
+        }
+
+
+        private DateTime downTime;
+        private object downSender;
+        private void imgPhoto_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.downSender = sender;
+                this.downTime = DateTime.Now;
+            }
+        }
+
+        private void imgPhoto_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && sender == this.downSender)
+            {
+                TimeSpan timeSinceDown = DateTime.Now - this.downTime;
+                if (timeSinceDown.TotalMilliseconds < 100)
+                {
+                    var img = imgPhoto.Source as BitmapSource;
+                    int stride = img.PixelWidth * 4;
+                    int size = img.PixelHeight * stride;
+                    byte[] pixels = new byte[size];
+                    img.CopyPixels(pixels, stride, 0);
+
+                    var downPosition = e.GetPosition(sender as Image);
+                    int index = (int)downPosition.Y * stride + 4 * (int)downPosition.X;
+
+                    byte blue = pixels[index];       //exactly red?
+                    byte green = pixels[index + 1];
+                    byte red = pixels[index + 2];    //exactly blue?
+                    byte alpha = pixels[index + 3];
+
+                    Console.Write("");
+                }
+            }
         }
     }
 }
