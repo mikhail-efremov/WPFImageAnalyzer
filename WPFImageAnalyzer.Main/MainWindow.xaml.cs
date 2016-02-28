@@ -16,7 +16,9 @@ using System.Windows.Media.Imaging;
 using System.Collections;
 using Microsoft.Win32;
 using System.Windows.Controls;
-using System.Windows.Shapes;
+using SysDrawing = System.Drawing;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace WPFChart3D
 {
@@ -34,6 +36,8 @@ namespace WPFChart3D
         // ***************************** selection rect ***************************
         ViewportRect m_selectRect = new ViewportRect();
         public int m_nRectModelIndex = -1;
+
+        private string filePath = String.Empty;
 
         public MainWindow()
         {
@@ -224,7 +228,7 @@ namespace WPFChart3D
             }
         }
 
-        public void OnViewportMouseMove(object sender, MouseEventArgs args)
+        public void OnViewportMouseMove(object sender, System.Windows.Input.MouseEventArgs args)
         {
             Point pt = args.GetPosition(mainViewport);
 
@@ -340,6 +344,7 @@ namespace WPFChart3D
             if (op.ShowDialog() == true)
             {
                 imgPhoto.Source = new BitmapImage(new Uri(op.FileName));
+                filePath = op.FileName;
             }
         }
 
@@ -353,8 +358,7 @@ namespace WPFChart3D
             group1.Children.Clear();
             group1.Children.Add(new MatrixTransform3D(m_transformMatrix.m_totalMatrix));
         }
-
-
+        
         private DateTime downTime;
         private object downSender;
         private void imgPhoto_MouseDown(object sender, MouseButtonEventArgs e)
@@ -387,9 +391,50 @@ namespace WPFChart3D
                     byte red = pixels[index + 2];    //exactly blue?
                     byte alpha = pixels[index + 3];
 
+                    var rect = new Rect(downPosition.X, downPosition.Y, 10, 10);
+
+                    var points = new List<Point>();
+                    
+                    var bmp = new SysDrawing.Bitmap(filePath);
+                    
+                    for (int i = 0; i < bmp.Size.Height; i++)
+                        for (int j = 0; j < bmp.Size.Width; j++)
+                        {
+                            if (rect.Contains(new Point(j, i)))
+                            {
+                                points.Add(new Point(j, i));
+                            }
+                        }
+                    
+                    var rgbList = new List<RGB>();
+                    foreach (var point in points)
+                    {
+                        var indexer = (int)point.Y * stride + 4 * (int)point.X;
+                        var RGB = new RGB(pixels[indexer + 2], pixels[indexer + 1], pixels[indexer]);
+                        rgbList.Add(RGB);
+                    }
                     Console.Write("");
                 }
             }
+        }
+    }
+
+    public class RGB
+    {
+        public byte R;
+        public byte G;
+        public byte B;
+
+        public RGB(byte r, byte g, byte b)
+        {
+            R = r;
+            G = g;
+            B = b;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("R:{0} G:{1} B{2}",R,G,B);
         }
     }
 }
