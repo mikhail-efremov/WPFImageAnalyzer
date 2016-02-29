@@ -95,14 +95,24 @@
                     <Label Height="25" Name="labelTriNo" Width="157" Canvas.Left="0" Canvas.Top="26">Triangle No:</Label>
                 </Canvas>
             </GroupBox>
+            <GroupBox Header="Plot helper" Width="169" Padding="0,10" 
+            	Foreground="DarkBlue" 
+            	Canvas.Top="417"
+            	Height="96">
+                <Canvas Height="57">
+                    <CheckBox Canvas.Left="10" Canvas.Top="10" Height="16" x:Name="checkBoxUse_Shape" Width="120" Content="Use Shape" />
+                    <CheckBox Canvas.Left="10" Canvas.Top="26" Height="16" x:Name="checkBoxUse_Surface" Width="120" Content="Use Sufrace" />
+                </Canvas>
+            </GroupBox>
         </Canvas>
 
-        <Image Margin="12,12,511,71" Name="imgPhoto" 
+        <Image Margin="12,12,956,495" Name="imgPhoto" 
         Stretch="None" Grid.Column="1" MouseDown ="imgPhoto_MouseDown" 
                MouseUp="imgPhoto_MouseUp"/>
         <Button Height="23" HorizontalAlignment="Left" 
         Margin="12,0,0,34" Name="btnLoad" VerticalAlignment="Bottom" 
         Width="75" Grid.Column="1" Click="btnLoad_Click">_Load</Button>
+        <Button x:Name="scatterButton_Copy" Click="scatterAllImageButton_Click" Content="Draw all image" Margin="10,521,76,10"/>
 
     </Grid>
 </Window>

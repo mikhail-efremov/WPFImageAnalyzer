@@ -9,7 +9,7 @@
 
 namespace WPFChart3D
 {
-    class Vertex3D
+    public class Vertex3D
     {
         public System.Windows.Media.Color color;    // color of the dot
         public float x, y, z;                       // location of the dot

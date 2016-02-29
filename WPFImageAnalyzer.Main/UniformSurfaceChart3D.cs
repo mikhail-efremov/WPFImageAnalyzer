@@ -11,6 +11,7 @@
 using System.Collections;
 using System.Windows.Media.Media3D;
 using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace WPFChart3D
 {
@@ -57,7 +58,29 @@ namespace WPFChart3D
                     SetPoint(i, j, xV, yV, 0);
                 }
             }
-         
+        }
+
+        public void SetGridRGB(List<RGB> rgbList, int xNo, int yNo, float xMin, float xMax, float yMin, float yMax)
+        {
+            SetDataNo(xNo * yNo);
+            m_nGridXNo = xNo;
+            m_nGridYNo = yNo;
+            m_xMin = xMin;
+            m_xMax = xMax;
+            m_yMin = yMin;
+            m_yMax = yMax;
+            float dx = (m_xMax - m_xMin) / ((float)xNo - 1);
+            float dy = (m_yMax - m_yMin) / ((float)yNo - 1);
+            for (int i = 0; i < xNo; i++)
+            {
+                for (int j = 0; j < yNo; j++)
+                {
+                    float xV = m_xMin + dx * ((float)(i));
+                    float yV = m_yMin + dy * ((float)(j));
+                    m_vertices[j * xNo + i] = new Vertex3D();
+                    SetPoint(i, j, xV, yV, 0);
+                }
+            }
         }
 
         // convert the uniform surface chart to a array of Mesh3D (only one element)
