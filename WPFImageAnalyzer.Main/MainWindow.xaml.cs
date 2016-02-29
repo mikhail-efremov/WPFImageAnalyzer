@@ -52,7 +52,7 @@ namespace WPFChart3D
 
             // display the 3d chart data no.
             gridNo.Text = String.Format("{0:d}", m_nSurfaceChartGridNo);
-            dataNo.Text = String.Format("{0:d}", m_nScatterPlotDataNo);
+//            dataNo.Text = String.Format("{0:d}", m_nScatterPlotDataNo);
 
             // display surface chart
             TestScatterPlot(1000);
@@ -298,7 +298,7 @@ namespace WPFChart3D
 
         private void scatterButton_Click(object sender, RoutedEventArgs e)
         {
-            int nDataNo = Int32.Parse(dataNo.Text);
+            int nDataNo = 10000;
             if (nDataNo < 3) return;
 
             if ((bool)checkBoxShape.IsChecked)
@@ -453,8 +453,9 @@ namespace WPFChart3D
             var zMax = zArray.Max();
             var zMin = zArray.Min();
 
-            var diff = (zMax + zMin) / 2;
-
+            var diff = (zMax - zMin) / 100;
+            diff = (diff * Convert.ToInt32(splitterPersentage.Text)) + zMin;
+/*           
             int count = 0;
             long sum = 0;
             for (int i = 0; i < zArray.Length; i++)
@@ -463,7 +464,7 @@ namespace WPFChart3D
                 count++;
             }
             diff = sum / count;
-
+*/          
             var lowList = new List<PossAndDiff>();
             var hightList = new List<PossAndDiff>();
 
@@ -494,25 +495,54 @@ namespace WPFChart3D
             var resArray = new float[zArray.Length];
             //Array.Copy(lowArray, 0, resArray, 0, lowArray.Length);
             //Array.Copy(hightArray, 0, resArray, lowArray.Length, hightArray.Length);
-
+            
+                        for (int i = 0; i < resArray.Length; i++)
+                        {
+                            foreach (var low in lowArray)
+                            {
+                                if (low.Possition == i)
+                                {
+                                    resArray[i] = low.Value - 50;
+                                }
+                            }
+                            foreach (var hight in hightArray)
+                            {
+                                if (hight.Possition == i)
+                                {
+                                    resArray[i] = hight.Value;
+                                }
+                            }
+                        }
+            
+            /*
+            var possArray = new PossAndDiff[resArray.Length];
             for (int i = 0; i < resArray.Length; i++)
             {
-                foreach (var low in lowArray)
+                if (i < lowArray.Length)
                 {
-                    if (low.Possition == i)
+                    if (lowArray[i].Possition == i)
                     {
-                        resArray[i] = low.Value - 50;
+                        possArray[i] = lowArray[i];
+                        resArray[i] = lowArray[i].Value - 50;
+                        continue;
                     }
                 }
-                foreach (var hight in hightArray)
+                if (i < hightArray.Length)
                 {
-                    if (hight.Possition == i)
+                    if (hightArray[i].Possition == i)
                     {
-                        resArray[i] = hight.Value;
+                        possArray[i] = hightArray[i];
+                        resArray[i] = hightArray[i].Value;
                     }
                 }
             }
 
+            for (int i = 0; i < possArray.Length; i++)
+            {
+                if (possArray[i].Possition != i)
+                    possArray = null;
+            }
+            */
             zArray = resArray;
             
             //------------------------------------------------------------------------------------------------//
