@@ -465,85 +465,13 @@ namespace WPFChart3D
             }
             diff = sum / count;
 */          
-            var lowList = new List<PossAndDiff>();
-            var hightList = new List<PossAndDiff>();
-
-            var possValueList = new List<PossAndDiff>();
             for (int i = 0; i < zArray.Length; i++)
             {
-                if (zArray[i] < diff)
+                if (zArray[i] > diff)
                 {
-                    lowList.Add(new PossAndDiff(i, zArray[i]));
-                }
-                if (zArray[i] >= diff)
-                {
-                    hightList.Add(new PossAndDiff(i, zArray[i]));
+                    zArray[i] = zArray[i] + 50;
                 }
             }
-
-            var lowArray = lowList.ToArray();
-            var hightArray = hightList.ToArray();
-
-            for (int i = 0; i < lowArray.Length; i++)
-            {
-                lowArray[i] = lowArray[i];
-            }
-            for (int i = 0; i < hightArray.Length; i++)
-            {
-                hightArray[i] = hightArray[i];
-            }
-            var resArray = new float[zArray.Length];
-            //Array.Copy(lowArray, 0, resArray, 0, lowArray.Length);
-            //Array.Copy(hightArray, 0, resArray, lowArray.Length, hightArray.Length);
-            
-                        for (int i = 0; i < resArray.Length; i++)
-                        {
-                            foreach (var low in lowArray)
-                            {
-                                if (low.Possition == i)
-                                {
-                                    resArray[i] = low.Value - 50;
-                                }
-                            }
-                            foreach (var hight in hightArray)
-                            {
-                                if (hight.Possition == i)
-                                {
-                                    resArray[i] = hight.Value;
-                                }
-                            }
-                        }
-            
-            /*
-            var possArray = new PossAndDiff[resArray.Length];
-            for (int i = 0; i < resArray.Length; i++)
-            {
-                if (i < lowArray.Length)
-                {
-                    if (lowArray[i].Possition == i)
-                    {
-                        possArray[i] = lowArray[i];
-                        resArray[i] = lowArray[i].Value - 50;
-                        continue;
-                    }
-                }
-                if (i < hightArray.Length)
-                {
-                    if (hightArray[i].Possition == i)
-                    {
-                        possArray[i] = hightArray[i];
-                        resArray[i] = hightArray[i].Value;
-                    }
-                }
-            }
-
-            for (int i = 0; i < possArray.Length; i++)
-            {
-                if (possArray[i].Possition != i)
-                    possArray = null;
-            }
-            */
-            zArray = resArray;
             
             //------------------------------------------------------------------------------------------------//
 
