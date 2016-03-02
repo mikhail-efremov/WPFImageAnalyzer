@@ -82,7 +82,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="StaticDrawUtils.cs" />
+    <Compile Include="ModelingElements\StaticDrawUtils.cs" />
+    <Compile Include="StaticInterfaceHandler.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,14 +98,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bar3D.cs" />
-    <Compile Include="Chart3D.cs" />
-    <Compile Include="ColorMesh3D.cs" />
-    <Compile Include="Cone3D.cs" />
-    <Compile Include="Cylinder3D.cs" />
-    <Compile Include="Ellipse3D.cs" />
-    <Compile Include="Mesh3D.cs" />
-    <Compile Include="Model3D.cs" />
+    <Compile Include="ModelingElements\Bar3D.cs" />
+    <Compile Include="ModelingElements\Chart3D.cs" />
+    <Compile Include="ModelingElements\ColorMesh3D.cs" />
+    <Compile Include="ModelingElements\Cone3D.cs" />
+    <Compile Include="ModelingElements\Cylinder3D.cs" />
+    <Compile Include="ModelingElements\Ellipse3D.cs" />
+    <Compile Include="ModelingElements\Mesh3D.cs" />
+    <Compile Include="ModelingElements\Model3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -118,16 +119,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Pyramid3D.cs" />
-    <Compile Include="ScatterChart3D.cs" />
-    <Compile Include="ScatterPlotItem.cs" />
-    <Compile Include="SurfaceChart3D.cs" />
-    <Compile Include="TextureMapping.cs" />
-    <Compile Include="TransformMatrix.cs" />
-    <Compile Include="Triangle3D.cs" />
-    <Compile Include="UniformSurfaceChart3D.cs" />
-    <Compile Include="Vertex3D.cs" />
-    <Compile Include="ViewportRect.cs" />
+    <Compile Include="ModelingElements\Pyramid3D.cs" />
+    <Compile Include="ModelingElements\ScatterChart3D.cs" />
+    <Compile Include="ModelingElements\ScatterPlotItem.cs" />
+    <Compile Include="ModelingElements\SurfaceChart3D.cs" />
+    <Compile Include="ModelingElements\TextureMapping.cs" />
+    <Compile Include="ModelingElements\TransformMatrix.cs" />
+    <Compile Include="ModelingElements\Triangle3D.cs" />
+    <Compile Include="ModelingElements\UniformSurfaceChart3D.cs" />
+    <Compile Include="ModelingElements\Vertex3D.cs" />
+    <Compile Include="ModelingElements\ViewportRect.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

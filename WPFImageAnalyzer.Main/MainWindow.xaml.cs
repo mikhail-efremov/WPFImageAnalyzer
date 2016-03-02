@@ -20,6 +20,7 @@ using System.Windows.Controls;
 using SysDrawing = System.Drawing;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using WPFImageAnalyzer;
 
 namespace WPFChart3D
 {
@@ -453,25 +454,12 @@ namespace WPFChart3D
             var zMax = zArray.Max();
             var zMin = zArray.Min();
 
-            var diff = (zMax - zMin) / 100;
-            diff = (diff * Convert.ToInt32(splitterPersentage.Text)) + zMin;
-/*           
-            int count = 0;
-            long sum = 0;
-            for (int i = 0; i < zArray.Length; i++)
-            {
-                sum += (long)zArray[i];
-                count++;
-            }
-            diff = sum / count;
-*/          
-            for (int i = 0; i < zArray.Length; i++)
-            {
-                if (zArray[i] > diff)
-                {
-                    zArray[i] = zArray[i] + 50;
-                }
-            }
+            var onePercent = (zMax - zMin) / 100;
+
+            var percents = StaticInterfaceHandler.GetSplitterArray(this);
+            var diffs = ToDiffArray(percents, onePercent, zMin);
+            zArray = SortByDiffs(zArray, diffs, 30);
+
             
             //------------------------------------------------------------------------------------------------//
 
@@ -588,6 +576,19 @@ namespace WPFChart3D
             TransformChart();
         }
 
+        private float[] ToDiffArray(int[] percentageArray, float percent, float min)
+        {
+            var diffArray = new float[percentageArray.Length];
+
+            for (int i = 0; i < percentageArray.Length; i++)
+            {
+                diffArray[i] = percent * percentageArray[i] + min;
+            }
+            Array.Sort(diffArray);
+
+            return diffArray;
+        }
+
         private void scatterAllImageButton_Click(object sender, RoutedEventArgs e)
         {
             DrawScatterAllImagePlot();
@@ -617,6 +618,67 @@ namespace WPFChart3D
                 rgbList.Add(RGB);
             }
             DrawScatterPlot(rgbList);
+        }
+
+        private float[] SortByDiffs(float[] zArray, float[] diffs, int breakage)
+        {
+            for (int i = 0; i < zArray.Length; i++)//:((
+            {
+                if (diffs.Length == 1)
+                {
+                    if (zArray[i] > diffs[0])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                }
+                if (diffs.Length == 2)
+                {
+                    if (zArray[i] > diffs[0] && zArray[i] <= diffs[1])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                    if (zArray[i] > diffs[1])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                }
+                if (diffs.Length == 3)
+                {
+                    if (zArray[i] > diffs[0] && zArray[i] <= diffs[1])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                    if (zArray[i] > diffs[1] && zArray[i] <= diffs[2])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                    if (zArray[i] > diffs[2])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                }
+                if (diffs.Length == 4)
+                {
+                    if (zArray[i] > diffs[0] && zArray[i] <= diffs[1])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                    if (zArray[i] > diffs[1] && zArray[i] <= diffs[2])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                    if (zArray[i] > diffs[2] && zArray[i] <= diffs[3])
+                    {
+                        zArray[i] = zArray[i] + breakage;
+                    }
+                    if (zArray[i] > diffs[3])
+                    {
+                        zArray[i] = zArray[i] + 30;
+                    }
+                }
+            }
+
+            return zArray;
         }
     }
 
