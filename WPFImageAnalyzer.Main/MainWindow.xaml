@@ -74,7 +74,6 @@
                     <Label Height="26" Name="label1" Width="57">Grid No.</Label>
                     <TextBox Height="22" Name="gridNo" Width="91" Canvas.Left="66" Canvas.Top="0" />
                     <CheckBox Canvas.Left="37" Canvas.Top="-268" Height="16" Name="checkBoxShape" Width="120" >Use Shape</CheckBox>
-                    <Button Canvas.Left="0" Canvas.Top="36" Height="29" Name="surfaceButton" Width="157" Click="surfaceButton_Click">Test</Button>
                 </Canvas>
             </GroupBox>
 
@@ -92,7 +91,10 @@
             	Canvas.Top="276"
             	Height="271">
                 <Canvas Height="57" Margin="0,122,0,50">
-                    
+
+                    <Label x:Name="label" Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="115" Canvas.Top="-141" RenderTransformOrigin="0.5,0.5">
+
+                    </Label>
                     <CheckBox Canvas.Left="10" Canvas.Top="10" Height="16" x:Name="checkBoxUse_Shape" Width="120" Content="Use Shape" />
                     <CheckBox Canvas.Left="10" Canvas.Top="26" Height="16" x:Name="checkBoxUse_Surface" Width="120" Content="Use Sufrace" />
                     <Button Height="23" HorizontalAlignment="Left"  Name="btnLoad" VerticalAlignment="Bottom" 
@@ -102,10 +104,14 @@
                     <TextBox Height="22" x:Name="splitterPersentage1" Width="91" Canvas.Left="1" Canvas.Top="-98" Text="50" />
                     <TextBox Height="22" x:Name="splitterPersentage2" Width="91" Canvas.Left="1" Canvas.Top="-71" Text="50" />
                     <TextBox Height="22" x:Name="splitterPersentage3" Width="91" Canvas.Left="1" Canvas.Top="-44" Text="50" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-119" Height="16" x:Name="checkBoxPersentage" Width="13" Content="" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-92" Height="16" x:Name="checkBoxPersentage1" Width="13" Content="" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-65" Height="16" x:Name="checkBoxPersentage2" Width="13" Content="" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-38" Height="16" x:Name="checkBoxPersentage3" Width="13" Content="" />
+                    <CheckBox Canvas.Left="97" Canvas.Top="-119" Height="16" x:Name="CheckBoxPersentage" Width="13" Content="" />
+                    <CheckBox Canvas.Left="97" Canvas.Top="-92" Height="16" x:Name="CheckBoxPersentage1" Width="13" Content="" />
+                    <CheckBox Canvas.Left="97" Canvas.Top="-65" Height="16" x:Name="CheckBoxPersentage2" Width="13" Content="" />
+                    <CheckBox Canvas.Left="97" Canvas.Top="-38" Height="16" x:Name="CheckBoxPersentage3" Width="13" Content="" />
+                    <CheckBox Canvas.Left="115" Canvas.Top="-119" Height="16" x:Name="CheckBoxInvisible" Width="13" Content="" />
+                    <CheckBox Canvas.Left="115" Canvas.Top="-92" Height="16" x:Name="CheckBoxInvisible1" Width="13" Content="" />
+                    <CheckBox Canvas.Left="115" Canvas.Top="-65" Height="16" x:Name="CheckBoxInvisible2" Width="13" Content="" />
+                    <CheckBox Canvas.Left="115" Canvas.Top="-38" Height="16" x:Name="CheckBoxInvisible3" Width="13" Content="" />
                 </Canvas>
             </GroupBox>
         </Canvas>

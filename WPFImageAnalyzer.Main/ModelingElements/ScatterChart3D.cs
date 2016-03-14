@@ -1,62 +1,54 @@
-﻿//------------------------------------------------------------------
-// (c) Copywrite Jianzhong Zhang
-// This code is under The Code Project Open License
-// Please read the attached license document before using this class
-//------------------------------------------------------------------
-
-// class of 3d scatter plot .
-// version 0.1
-
-using System.Collections;
+﻿using System.Collections;
 using System.Windows.Media.Media3D;
 using System.Windows.Controls;
-using System.Windows;
 
 namespace WPFChart3D
 {
     class ScatterChart3D: Chart3D
     {
-        public WPFChart3D.ScatterPlotItem Get(int n)
+        public ScatterPlotItem Get(int n)
         {
-            return (ScatterPlotItem)m_vertices[n];
+            return (ScatterPlotItem)MVertices[n];
         }
         
-        public void SetVertex(int n, WPFChart3D.ScatterPlotItem value)
+        public void SetVertex(int n, ScatterPlotItem value)
         {
-            m_vertices[n] = value;
+            MVertices[n] = value;
         }
 
         // convert the 3D scatter plot into a array of Mesh3D object
         public ArrayList GetMeshes()
         {
-            int nDotNo = GetDataNo();
+            var nDotNo = GetDataNo();
             if (nDotNo == 0) return null;
-            ArrayList meshs = new ArrayList();
+            var meshs = new ArrayList();
 
-            int nVertIndex = 0;
-            for (int i = 0; i < nDotNo; i++)
+            var nVertIndex = 0;
+            for (var i = 0; i < nDotNo; i++)
             {
-                ScatterPlotItem plotItem = Get(i);
-                int nType = plotItem.shape % Chart3D.SHAPE_NO;
-                float w = plotItem.w;
-                float h = plotItem.h;
+                var plotItem = Get(i);
+                if(plotItem == null)
+                    continue;
+                var nType = plotItem.shape % ShapeNo;
+                var w = plotItem.w;
+                var h = plotItem.h;
                 Mesh3D dot;
-                m_vertices[i].nMinI = nVertIndex;
+                MVertices[i].nMinI = nVertIndex;
                 switch (nType)
                 {
-                    case (int)SHAPE.BAR:
+                    case (int)Shape.Bar:
                         dot = new Bar3D(0, 0, 0, w, w, h);
                         break;
-                    case (int)SHAPE.CONE:
+                    case (int)Shape.Cone:
                         dot = new Cone3D(w, w, h, 7);
                         break;
-                    case (int)SHAPE.CYLINDER:
+                    case (int)Shape.Cylinder:
                         dot = new Cylinder3D(w, w, h, 7);
                         break;
-                    case (int)SHAPE.ELLIPSE:
+                    case (int)Shape.Ellipse:
                         dot = new Ellipse3D(w, w, h, 7);
                         break;
-                    case (int)SHAPE.PYRAMID:
+                    case (int)Shape.Pyramid:
                         dot = new Pyramid3D(w, w, h);
                         break;
                     default:
@@ -64,7 +56,7 @@ namespace WPFChart3D
                         break;
                 }
                 nVertIndex += dot.GetVertexNo();
-                m_vertices[i].nMaxI = nVertIndex - 1;
+                MVertices[i].nMaxI = nVertIndex - 1;
 
                 TransformMatrix.Transform(dot, new Point3D(plotItem.x, plotItem.y, plotItem.z), 0, 0);
                 dot.SetColor(plotItem.color);
@@ -76,58 +68,52 @@ namespace WPFChart3D
         }
 
         // selection
-        public override void Select(ViewportRect rect, TransformMatrix matrix, Viewport3D viewport3d)
+        public override void Select(ViewportRect rect, TransformMatrix matrix, Viewport3D viewport3D)
         {
-            int nDotNo = GetDataNo();
+            var nDotNo = GetDataNo();
             if (nDotNo == 0) return;
 
-            double xMin = rect.XMin();
-            double xMax = rect.XMax();
-            double yMin = rect.YMin();
-            double yMax = rect.YMax();
+            var xMin = rect.XMin();
+            var xMax = rect.XMax();
+            var yMin = rect.YMin();
+            var yMax = rect.YMax();
 
-            for (int i = 0; i < nDotNo; i++)
+            for (var i = 0; i < nDotNo; i++)
             {
-                ScatterPlotItem plotItem = Get(i);
-                Point pt = matrix.VertexToViewportPt(new Point3D(plotItem.x, plotItem.y, plotItem.z),
-                    viewport3d);
+                var plotItem = Get(i);
+                if(plotItem == null)
+                    continue;
+                var pt = matrix.VertexToViewportPt(new Point3D(plotItem.x, plotItem.y, plotItem.z),
+                    viewport3D);
 
                 if ((pt.X > xMin) && (pt.X < xMax) && (pt.Y > yMin) && (pt.Y < yMax))
                 {
-                    m_vertices[i].selected = true;
+                    MVertices[i].selected = true;
                 }
                 else
                 {
-                    m_vertices[i].selected = false;
+                    MVertices[i].selected = false;
                 }
             }
        }
 
         // highlight the selection
-        public override void HighlightSelection(System.Windows.Media.Media3D.MeshGeometry3D meshGeometry, System.Windows.Media.Color selectColor)
+        public override void HighlightSelection(MeshGeometry3D meshGeometry, System.Windows.Media.Color selectColor)
         {
-            int nDotNo = GetDataNo();
+            var nDotNo = GetDataNo();
             if (nDotNo == 0) return;
 
-            Point mapPt;
-            for (int i = 0; i < nDotNo; i++)
+            for (var i = 0; i < nDotNo; i++)
             {
-                if (m_vertices[i].selected)
-                {
-                    mapPt = TextureMapping.GetMappingPosition(selectColor, false);
-                }
-                else
-                {
-                    mapPt = TextureMapping.GetMappingPosition(m_vertices[i].color, false);
-                }
-                int nMin = m_vertices[i].nMinI;
-                int nMax = m_vertices[i].nMaxI;
-                for(int j=nMin; j<=nMax; j++)
+                var mapPt = TextureMapping.GetMappingPosition(MVertices[i].selected ? selectColor 
+                    : MVertices[i].color, false);
+                var nMin = MVertices[i].nMinI;
+                var nMax = MVertices[i].nMaxI;
+                for(var j=nMin; j<=nMax; j++)
                 {
                     meshGeometry.TextureCoordinates[j] = mapPt;
                 }
             }
         }
-     
     }
 }

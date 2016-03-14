@@ -14,7 +14,7 @@ namespace WPFImageAnalyzer
         {
             var splitterList = new List<int>();
 
-            if (mainWindow.checkBoxPersentage.IsChecked == true)
+            if (mainWindow.CheckBoxPersentage.IsChecked == true)
             {
                 int splitter;
                 if (Int32.TryParse(mainWindow.splitterPersentage.Text, out splitter))
@@ -25,7 +25,7 @@ namespace WPFImageAnalyzer
                 else MessageBox.Show("Cannot parse value at 1st textBox. Value have to be int, less then 0" +
                      "and greater then 0");
             }
-            if (mainWindow.checkBoxPersentage1.IsChecked == true)
+            if (mainWindow.CheckBoxPersentage1.IsChecked == true)
             {
                 int splitter;
                 if (Int32.TryParse(mainWindow.splitterPersentage1.Text, out splitter))
@@ -36,7 +36,7 @@ namespace WPFImageAnalyzer
                 else MessageBox.Show("Cannot parse value at 2st textBox. Value have to be int, less then 0" +
                      "and greater then 0");
             }
-            if (mainWindow.checkBoxPersentage2.IsChecked == true)
+            if (mainWindow.CheckBoxPersentage2.IsChecked == true)
             {
                 int splitter;
                 if (Int32.TryParse(mainWindow.splitterPersentage2.Text, out splitter))
@@ -47,7 +47,7 @@ namespace WPFImageAnalyzer
                 else MessageBox.Show("Cannot parse value at 3st textBox. Value have to be int, less then 0" +
                      "and greater then 0");
             }
-            if (mainWindow.checkBoxPersentage3.IsChecked == true)
+            if (mainWindow.CheckBoxPersentage3.IsChecked == true)
             {
                 int splitter;
                 if (Int32.TryParse(mainWindow.splitterPersentage3.Text, out splitter))

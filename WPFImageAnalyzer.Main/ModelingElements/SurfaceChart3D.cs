@@ -18,7 +18,7 @@ namespace WPFChart3D
     class SurfaceChart3D: Chart3D
     {
         // selection
-        public override void Select(ViewportRect rect, TransformMatrix matrix, Viewport3D viewport3d)
+        public override void Select(ViewportRect rect, TransformMatrix matrix, Viewport3D viewport3D)
         {
             int nDotNo = GetDataNo();
             if (nDotNo == 0) return;
@@ -30,16 +30,16 @@ namespace WPFChart3D
 
             for (int i = 0; i < nDotNo; i++)
             {
-                Point pt = matrix.VertexToViewportPt(new Point3D(m_vertices[i].x, m_vertices[i].y, m_vertices[i].z),
-                    viewport3d);
+                Point pt = matrix.VertexToViewportPt(new Point3D(MVertices[i].x, MVertices[i].y, MVertices[i].z),
+                    viewport3D);
 
                 if ((pt.X > xMin) && (pt.X < xMax) && (pt.Y > yMin) && (pt.Y < yMax))
                 {
-                    m_vertices[i].selected = true;
+                    MVertices[i].selected = true;
                 }
                 else
                 {
-                    m_vertices[i].selected = false;
+                    MVertices[i].selected = false;
                 }
             }
        }
@@ -53,15 +53,15 @@ namespace WPFChart3D
             Point mapPt;
             for (int i = 0; i < nDotNo; i++)
             {
-                if (m_vertices[i].selected)
+                if (MVertices[i].selected)
                 {
                     mapPt = TextureMapping.GetMappingPosition(selectColor, true);
                 }
                 else
                 {
-                    mapPt = TextureMapping.GetMappingPosition(m_vertices[i].color, true);
+                    mapPt = TextureMapping.GetMappingPosition(MVertices[i].color, true);
                 }
-                int nMin = m_vertices[i].nMinI;
+                int nMin = MVertices[i].nMinI;
                 meshGeometry.TextureCoordinates[nMin] = mapPt;
             }
         }

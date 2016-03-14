@@ -17,67 +17,68 @@ namespace WPFChart3D
 {
     class UniformSurfaceChart3D: SurfaceChart3D
     {
+        private int _mNGridXNo, _mNGridYNo;               // the grid number on each axis
 
         public void SetPoint(int i, int j, float x, float y, float z)
         {
-            int nI = j * m_nGridXNo + i;
-            m_vertices[nI].x = x;
-            m_vertices[nI].y = y;
-            m_vertices[nI].z = z;
+            var nI = j * _mNGridXNo + i;
+            MVertices[nI].x = x;
+            MVertices[nI].y = y;
+            MVertices[nI].z = z;
         }
 
         public void SetZ(int i, int j, float z)
         {
-            m_vertices[j*m_nGridXNo + i].z = z;
+            MVertices[j*_mNGridXNo + i].z = z;
         }
 
         public void SetColor(int i, int j, Color color)
         {
-            int nI = j * m_nGridXNo + i;
-            m_vertices[nI].color = color;
+            var nI = j * _mNGridXNo + i;
+            MVertices[nI].color = color;
        }
 
         public void SetGrid(int xNo, int yNo, float xMin, float xMax, float yMin, float yMax)
         {
             SetDataNo(xNo * yNo);
-            m_nGridXNo = xNo;
-            m_nGridYNo = yNo;
-            m_xMin = xMin;
-            m_xMax = xMax;
-            m_yMin = yMin;
-            m_yMax = yMax;
-            float dx = (m_xMax - m_xMin) / ((float)xNo - 1);
-            float dy = (m_yMax - m_yMin) / ((float)yNo - 1);
+            _mNGridXNo = xNo;
+            _mNGridYNo = yNo;
+            MxMin = xMin;
+            MxMax = xMax;
+            MyMin = yMin;
+            MyMax = yMax;
+            var dx = (MxMax - MxMin) / ((float)xNo - 1);
+            var dy = (MyMax - MyMin) / ((float)yNo - 1);
             for (int i = 0; i < xNo; i++)
             {
                 for (int j = 0; j < yNo; j++)
                 {
-                    float xV = m_xMin + dx * ((float)(i));
-                    float yV = m_yMin + dy * ((float)(j));
-                    m_vertices[j * xNo + i] = new Vertex3D();
+                    var xV = MxMin + dx * i;
+                    var yV = MyMin + dy * j;
+                    MVertices[j * xNo + i] = new Vertex3D();
                     SetPoint(i, j, xV, yV, 0);
                 }
             }
         }
 
-        public void SetGridRGB(List<RGB> rgbList, int xNo, int yNo, float xMin, float xMax, float yMin, float yMax)
+        public void SetGridRgb(List<Rgb> rgbList, int xNo, int yNo, float xMin, float xMax, float yMin, float yMax)
         {
             SetDataNo(xNo * yNo);
-            m_nGridXNo = xNo;
-            m_nGridYNo = yNo;
-            m_xMin = xMin;
-            m_xMax = xMax;
-            m_yMin = yMin;
-            m_yMax = yMax;
-            float dx = (m_xMax - m_xMin) / ((float)xNo - 1);
-            float dy = (m_yMax - m_yMin) / ((float)yNo - 1);
-            for (int i = 0; i < xNo; i++)
+            _mNGridXNo = xNo;
+            _mNGridYNo = yNo;
+            MxMin = xMin;
+            MxMax = xMax;
+            MyMin = yMin;
+            MyMax = yMax;
+            var dx = (MxMax - MxMin) / ((float)xNo - 1);
+            var dy = (MyMax - MyMin) / ((float)yNo - 1);
+            for (var i = 0; i < xNo; i++)
             {
-                for (int j = 0; j < yNo; j++)
+                for (var j = 0; j < yNo; j++)
                 {
-                    float xV = m_xMin + dx * ((float)(i));
-                    float yV = m_yMin + dy * ((float)(j));
-                    m_vertices[j * xNo + i] = new Vertex3D();
+                    var xV = MxMin + dx * i;
+                    var yV = MyMin + dy * j;
+                    MVertices[j * xNo + i] = new Vertex3D();
                     SetPoint(i, j, xV, yV, 0);
                 }
             }
@@ -86,32 +87,32 @@ namespace WPFChart3D
         // convert the uniform surface chart to a array of Mesh3D (only one element)
         public ArrayList GetMeshes()
         {
-            ArrayList meshes = new ArrayList();
-            ColorMesh3D surfaceMesh = new ColorMesh3D();
+            var meshes = new ArrayList();
+            var surfaceMesh = new ColorMesh3D();
 
-            surfaceMesh.SetSize(m_nGridXNo * m_nGridYNo, 2 * (m_nGridXNo - 1) * (m_nGridYNo - 1));
+            surfaceMesh.SetSize(_mNGridXNo * _mNGridYNo, 2 * (_mNGridXNo - 1) * (_mNGridYNo - 1));
 
-            for (int i = 0; i < m_nGridXNo; i++)
+            for (var i = 0; i < _mNGridXNo; i++)
             {
-                for (int j = 0; j < m_nGridYNo; j++)
+                for (var j = 0; j < _mNGridYNo; j++)
                 {
-                    int nI = j * m_nGridXNo + i;
-                    Vertex3D vert = m_vertices[nI];
-                    m_vertices[nI].nMinI = nI;
+                    var nI = j * _mNGridXNo + i;
+                    var vert = MVertices[nI];
+                    MVertices[nI].nMinI = nI;
                     surfaceMesh.SetPoint(nI, new Point3D(vert.x, vert.y, vert.z));
                     surfaceMesh.SetColor(nI, vert.color);
                 }
             }
             // set triangle
-            int nT = 0;
-            for (int i = 0; i < m_nGridXNo-1; i++)
+            var nT = 0;
+            for (var i = 0; i < _mNGridXNo-1; i++)
             {
-                for (int j = 0; j < m_nGridYNo-1; j++)
+                for (var j = 0; j < _mNGridYNo-1; j++)
                 {
-                    int n00 = j * m_nGridXNo + i;
-                    int n10 = j * m_nGridXNo + i + 1;
-                    int n01 = (j + 1) * m_nGridXNo + i;
-                    int n11 = (j + 1) * m_nGridXNo + i + 1;
+                    var n00 = j * _mNGridXNo + i;
+                    var n10 = j * _mNGridXNo + i + 1;
+                    var n01 = (j + 1) * _mNGridXNo + i;
+                    var n11 = (j + 1) * _mNGridXNo + i + 1;
 
                     surfaceMesh.SetTriangle(nT, n00, n10, n01);
                     nT++;
@@ -123,7 +124,5 @@ namespace WPFChart3D
 
             return meshes;
         }
-        
-        private int m_nGridXNo, m_nGridYNo;               // the grid number on each axis
     }
 }
