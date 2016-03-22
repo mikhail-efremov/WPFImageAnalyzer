@@ -327,7 +327,6 @@ namespace WPFChart3D
             _m_3DChart.SetDataNo(rgbList.Count);
 
             // 2. set property of each dot (size, position, shape, color)
-            var randomObject = new Random();
             var nDataRange = 200;
 
             var zArray = new float[rgbList.Count];
@@ -362,7 +361,8 @@ namespace WPFChart3D
 
 
             //------------------------------------------------------------------------------------------------//
-            
+
+            var radgisticList = new List<Rgb>();
             for (var i = 0; i < rgbList.Count; i++)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -371,33 +371,165 @@ namespace WPFChart3D
 
                 var plotItem = new ScatterPlotItem
                 {
-                    w = 3,
-                    h = 5
+                    w = 1,
+                    h = 1
                 };
-                
+
                 var r = rgbList[i].R;
                 var g = rgbList[i].G;
                 var b = rgbList[i].B;
-                    
-                plotItem.x = (float)rgbList[i].X;
-                plotItem.y = (float)rgbList[i].Y;
-                plotItem.z = zArray[i] - 500;
-                
-                plotItem.shape = randomObject.Next(4);
 
-                var nR = r;
-                var nG = g;
-                var nB = b;
+                plotItem.x = (float) rgbList[i].X;
+                plotItem.y = (float) rgbList[i].Y;
+                plotItem.z = zArray[i] - 500;
+
+                //   plotItem.shape = randomObject.Next(4);
+
+                plotItem.shape = (int) Chart3D.Shape.Cylinder;
+
 
                 //Region for contur drawing
                 if (diffs.Length > 0)
-                    plotItem.color = zArray[i] > diffs[0] - 5 && zArray[i] < diffs[0]
-                        ? Color.FromRgb(255, 50, 50)
-                        : Color.FromRgb(nR, nG, nB);
+                {
+                    if (zArray[i] > diffs[0] - 1 && zArray[i] < diffs[0])
+                    {
+                        if (radgisticList.Count == 0)
+                            radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
+                        for (var j = 0; j < radgisticList.Count; j++)
+                        {
+                            if (radgisticList[j].X != rgbList[i].X && radgisticList[j].Y != rgbList[i].Y)
+                            {
+                                radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        plotItem.color = Color.FromRgb(r, g, b);
+                        ((ScatterChart3D)_m_3DChart).SetVertex(i, plotItem);
+                    }
+                }
                 else
-                    plotItem.color = Color.FromRgb(nR, nG, nB);
-                ((ScatterChart3D)_m_3DChart).SetVertex(i, plotItem);
+                {
+                    plotItem.color = Color.FromRgb(r, g, b);
+                    ((ScatterChart3D) _m_3DChart).SetVertex(i, plotItem);
+                }
             }
+
+            //для каждой точки на оси z мы ищем соседние - если не нашли - 
+            //ищем точки, который рямом с этой, но уже на оси z+-1
+            //и так далее z+-2, z+-3, z+-4, ...
+            //если выше точек нет - не ищем по этой оси z
+            //нашли что возле каждой точки есть соседняя
+            //??????????????????????????????????????????
+            //PROFIT
+
+            for (var i = 0; i < radgisticList.Count; i++)
+            {
+                var curr = radgisticList[i];
+
+                for (var index = 0; index < radgisticList.Count; index++)
+                {
+                    var toor = radgisticList[index];
+
+                    var tX = (int) toor.X;
+                    var tY = (int) toor.Y;
+                    var cX = (int) curr.X;
+                    var cY = (int) curr.Y;
+
+                    if (cX - 1 == tX && cY == tY)
+                        break;
+                    if (cX + 1 == tX && cY == tY)
+                        break;
+                    if (cX == tX && cY - 1 == tY)
+                        break;
+                    if (cX == tX && cY + 1 == tY)
+                        break;
+                    if (cX - 1 == tX && cY + 1 == tY)
+                        break;
+                    if (cX - 1 == tX && cY - 1 == tY)
+                        break;
+                    if (cX + 1 == tX && cY + 1 == tY)
+                        break;
+                    if (cX + 1 == tX && cY - 1 == tY)
+                        break;
+
+                    var hello = zArray[0];
+
+                    for (int j = 0; j < zArray.Length; j++)
+                    {
+                        if (zArray[j] > diffs[0] - 2 && zArray[j] < diffs[0])
+                        {
+                            if (radgisticList.Count == 0)
+                                radgisticList.Add(new Rgb(0, 0, 0, rgbList[j].X, rgbList[j].Y, zArray[j], j));
+                            for (var k = 0; k < radgisticList.Count; k++)
+                            {
+                                if (radgisticList[k].X != rgbList[j].X && radgisticList[k].Y != rgbList[j].Y)
+                                {
+                                    radgisticList.Add(new Rgb(0, 0, 0, rgbList[j].X, rgbList[j].Y, zArray[j], j));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    var hel2lo = rgbList[0];
+                }
+            }
+
+            /*
+            //pixel search
+            for (var i = 0; i < radgisticList.Count; i++)
+            {
+                var curr = radgisticList[i];
+                for (var index = 0; index < radgisticList.Count; index++)
+                {
+                    var toor = radgisticList[index];
+                    if (curr.X - 1 == toor.X && curr.Y == toor.Y)
+                        break;
+                    if (curr.X + 1 == toor.X && curr.Y == toor.Y)
+                        break;
+                    if (curr.X == toor.X && curr.Y - 1 == toor.Y)
+                        break;
+                    if (curr.X == toor.X && curr.Y + 1 == toor.Y)
+                        break;
+                    if (curr.X - 1 == toor.X && curr.Y + 1 == toor.Y)
+                        break;
+                    if (curr.X - 1 == toor.X && curr.Y - 1 == toor.Y)
+                        break;
+                    if (curr.X + 1 == toor.X && curr.Y + 1 == toor.Y)
+                        break;
+                    if (curr.X + 1 == toor.X && curr.Y - 1 == toor.Y)
+                        break;
+
+                    for (var ka = 0; ka < rgbList.Count; ka++)
+                    {
+                        if (rgbList[ka].X - 1 == curr.X && rgbList[ka].Y == curr.Y)
+                            if(zArray[ka] < curr.Z)
+                                radgisticList.Add((new Rgb(rgbList[ka].R, rgbList[ka].G,
+                                    rgbList[ka].B, rgbList[ka].X, rgbList[ka].Y,
+                                    zArray[ka], ka)));
+                    }
+                }
+            }
+            */
+
+                //for radgistic
+                foreach (Rgb rad in radgisticList)
+                {
+                    var plotItem = new ScatterPlotItem
+                    {
+                        w = 1,
+                        h = 1,
+                        x = (float) rad.X,
+                        y = (float) rad.Y,
+                        z = (float) rad.Z - 500,
+                        shape = (int) Chart3D.Shape.Cylinder,
+                        color = Color.FromRgb(255, 50, 50)
+                    };
+                    ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
+                }
 
             // 3. set the axes
             _m_3DChart.GetDataRange();
@@ -636,6 +768,8 @@ namespace WPFChart3D
         public byte B;
         public double X;
         public double Y;
+        public double Z;
+        public int Possition;
 
         public Rgb(byte r, byte g, byte b, double x, double y)
         {
@@ -645,6 +779,19 @@ namespace WPFChart3D
 
             X = x;
             Y = y;
+        }
+
+        public Rgb(byte r, byte g, byte b, double x, double y, double z, int poss)
+        {
+            R = r;
+            G = g;
+            B = b;
+
+            X = x;
+            Y = y;
+            Z = z;
+
+            Possition = poss;
         }
 
         public override string ToString()
