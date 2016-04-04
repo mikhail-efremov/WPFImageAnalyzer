@@ -425,118 +425,78 @@ namespace WPFChart3D
             //??????????????????????????????????????????
             //PROFIT
 
-            for (var i = 0; i < radgisticList.Count; i++)
+            for(var i = 0; i < zArray.Length; i++)
             {
-                var curr = radgisticList[i];
-
-                for (var index = 0; index < radgisticList.Count; index++)
+                //Region for contur drawing
+                if (diffs.Length > 0)
                 {
-                    var toor = radgisticList[index];
-
-                    var tX = (int) toor.X;
-                    var tY = (int) toor.Y;
-                    var cX = (int) curr.X;
-                    var cY = (int) curr.Y;
-
-                    if (cX - 1 == tX && cY == tY)
-                        break;
-                    if (cX + 1 == tX && cY == tY)
-                        break;
-                    if (cX == tX && cY - 1 == tY)
-                        break;
-                    if (cX == tX && cY + 1 == tY)
-                        break;
-                    if (cX - 1 == tX && cY + 1 == tY)
-                        break;
-                    if (cX - 1 == tX && cY - 1 == tY)
-                        break;
-                    if (cX + 1 == tX && cY + 1 == tY)
-                        break;
-                    if (cX + 1 == tX && cY - 1 == tY)
-                        break;
-
-                    var hello = zArray[0];
-
-                    for (int j = 0; j < zArray.Length; j++)
+                    if (zArray[i] > diffs[0] - 50 && zArray[i] < diffs[0] - 1)
                     {
-                        if (zArray[j] > diffs[0] - 2 && zArray[j] < diffs[0])
+                        if (radgisticList.Count == 0)
+                            radgisticList.Add(new Rgb(rgbList[i].R, rgbList[i].G, rgbList[i].B,
+                                rgbList[i].X, rgbList[i].Y, zArray[i], i));
+
+                        for (var j = 0; j < radgisticList.Count; j++)
                         {
-                            if (radgisticList.Count == 0)
-                                radgisticList.Add(new Rgb(0, 0, 0, rgbList[j].X, rgbList[j].Y, zArray[j], j));
-                            for (var k = 0; k < radgisticList.Count; k++)
+                                if (IsBeside((int)radgisticList[j].X, (int)radgisticList[j].Y,
+                                    (int)rgbList[i].X,(int)rgbList[i].Y,
+                                    2))
                             {
-                                if (radgisticList[k].X != rgbList[j].X && radgisticList[k].Y != rgbList[j].Y)
-                                {
-                                    radgisticList.Add(new Rgb(0, 0, 0, rgbList[j].X, rgbList[j].Y, zArray[j], j));
-                                    break;
-                                }
+                                var r = rgbList[i].R;
+                                var g = rgbList[i].G;
+                                var b = rgbList[i].B;
+
+                                radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
+                                break;
                             }
                         }
                     }
-
-                    var hel2lo = rgbList[0];
                 }
             }
 
-            /*
-            //pixel search
-            for (var i = 0; i < radgisticList.Count; i++)
+            for (var i = 0; i < zArray.Length; i++)
             {
-                var curr = radgisticList[i];
-                for (var index = 0; index < radgisticList.Count; index++)
+                if (diffs.Length > 0)
                 {
-                    var toor = radgisticList[index];
-                    if (curr.X - 1 == toor.X && curr.Y == toor.Y)
-                        break;
-                    if (curr.X + 1 == toor.X && curr.Y == toor.Y)
-                        break;
-                    if (curr.X == toor.X && curr.Y - 1 == toor.Y)
-                        break;
-                    if (curr.X == toor.X && curr.Y + 1 == toor.Y)
-                        break;
-                    if (curr.X - 1 == toor.X && curr.Y + 1 == toor.Y)
-                        break;
-                    if (curr.X - 1 == toor.X && curr.Y - 1 == toor.Y)
-                        break;
-                    if (curr.X + 1 == toor.X && curr.Y + 1 == toor.Y)
-                        break;
-                    if (curr.X + 1 == toor.X && curr.Y - 1 == toor.Y)
-                        break;
-
-                    for (var ka = 0; ka < rgbList.Count; ka++)
+                    if (zArray[i] > diffs[0] - 50 && zArray[i] < diffs[0] - 1)
                     {
-                        if (rgbList[ka].X - 1 == curr.X && rgbList[ka].Y == curr.Y)
-                            if(zArray[ka] < curr.Z)
-                                radgisticList.Add((new Rgb(rgbList[ka].R, rgbList[ka].G,
-                                    rgbList[ka].B, rgbList[ka].X, rgbList[ka].Y,
-                                    zArray[ka], ka)));
+                        for(var rad = 0; rad < radgisticList.Count; rad++)
+                        {
+                            if (radgisticList[rad].X == rgbList[i].X && radgisticList[rad].Y == rgbList[i].Y)
+                            {
+                                var r = rgbList[i].R;
+                                var g = rgbList[i].G;
+                                var b = rgbList[i].B;
+
+                                radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
+                       //         break;
+                            }
+                        }
                     }
                 }
             }
-            */
 
-                //for radgistic
-                foreach (Rgb rad in radgisticList)
+            foreach (var rad in radgisticList)
+            {
+                var plotItem = new ScatterPlotItem
                 {
-                    var plotItem = new ScatterPlotItem
-                    {
-                        w = 1,
-                        h = 1,
-                        x = (float) rad.X,
-                        y = (float) rad.Y,
-                        z = (float) rad.Z - 500,
-                        shape = (int) Chart3D.Shape.Cylinder,
-                        color = Color.FromRgb(255, 50, 50)
-                    };
-                    ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
-                }
+                    w = 1,
+                    h = 1,
+                    x = (float) rad.X,
+                    y = (float) rad.Y,
+                    z = (float) rad.Z - 500,
+                    shape = (int) Chart3D.Shape.Cylinder,
+                    color = Color.FromRgb(255, 50, 50)
+                };
+                ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
+            }
 
             // 3. set the axes
             _m_3DChart.GetDataRange();
             _m_3DChart.SetAxes();
 
             // 4. get Mesh3D array from the scatter plot
-            ArrayList meshs = ((ScatterChart3D)_m_3DChart).GetMeshes();
+            var meshs = ((ScatterChart3D)_m_3DChart).GetMeshes();
 
             // 5. display model vertex no and triangle no
             UpdateModelSizeInfo(meshs);
@@ -549,6 +509,27 @@ namespace WPFChart3D
             var viewRange = (float)nDataRange;
             _mTransformMatrix.CalculateProjectionMatrix(0, viewRange, 0, viewRange, 0, viewRange, 0.5);
             TransformChart();
+        }
+
+        private bool IsBeside(int fX, int fY, int sX, int sY, int sensivity)
+        {
+            if (fX - sensivity == sX && fY == sY)
+                return true;
+            if (fX + sensivity == sX && fY == sY)
+                return true;
+            if (fX == sX && fY - sensivity == sY)
+                return true;
+            if (fX == sX && fY + sensivity == sY)
+                return true;
+            if (fX - sensivity == sX && fY + sensivity == sY)
+                return true;
+            if (fX - sensivity == sX && fY - sensivity == sY)
+                return true;
+            if (fX + sensivity == sX && fY + sensivity == sY)
+                return true;
+            if (fX + sensivity == sX && fY - sensivity == sY)
+                return true;
+            return false;
         }
 
         // function for testing surface chart
