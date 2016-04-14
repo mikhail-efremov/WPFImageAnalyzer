@@ -346,7 +346,7 @@ namespace WPFChart3D
             var percents = StaticInterfaceHandler.GetSplitterArray(this);
             var diffs = ToDiffArray(percents, onePercent, zMin);
 
-            zArray = SortByDiffs(zArray, diffs, 30, new[]
+            zArray = SortByDiffs(zArray, diffs, Int32.Parse(splitterBackage.Text), new[]
             {
                 CheckBoxInvisible.IsChecked != null && CheckBoxInvisible.IsChecked.Value,
                 CheckBoxInvisible1.IsChecked != null && CheckBoxInvisible1.IsChecked.Value,
@@ -631,6 +631,7 @@ namespace WPFChart3D
             var rgbList = (from point in points let indexer = (int) point.Y*stride + 4*(int) point.X
                            select new Rgb(pixels[indexer + 2], pixels[indexer + 1], pixels[indexer], point.X, point.Y)).ToList();
             DrawScatterPlot(rgbList);
+            GC.Collect();
         }
 
         private float[] SortByDiffs(float[] zArray, float[] diffs, int breakage, bool[] invisible)
