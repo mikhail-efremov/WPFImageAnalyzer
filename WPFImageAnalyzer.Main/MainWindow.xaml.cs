@@ -49,11 +49,6 @@ namespace WPFChart3D
             var model3d = new Model3D();
             var meshs = m_selectRect.GetMeshes();
             m_nRectModelIndex = model3d.UpdateModel(meshs, null, m_nRectModelIndex, mainViewport);
-
-            // display the 3d chart data no.
-            gridNo.Text = String.Format("{0:d}", MnSurfaceChartGridNo);
-//            dataNo.Text = String.Format("{0:d}", m_nScatterPlotDataNo);
-
             // display surface chart
             TestScatterPlot(1000);
             TransformChart();
@@ -371,8 +366,8 @@ namespace WPFChart3D
 
                 var plotItem = new ScatterPlotItem
                 {
-                    w = 1,
-                    h = 1
+                    w = 0.4f,
+                    h = 0.4f
                 };
 
                 var r = rgbList[i].R;
@@ -425,56 +420,60 @@ namespace WPFChart3D
             //??????????????????????????????????????????
             //PROFIT
 
+            var searchSensivity = 2;
+            var lowSensivity = 0;//0;
+            var highSensivity = zArray.Max() - diffs[0];//;
+
             for(var i = 0; i < zArray.Length; i++)
             {
                 //Region for contur drawing
                 if (diffs.Length > 0)
                 {
-                    if (zArray[i] > diffs[0] - 50 && zArray[i] < diffs[0] - 1)
+                    if (zArray[i] > diffs[0] + lowSensivity && zArray[i] < diffs[0] + highSensivity)
                     {
-                        if (radgisticList.Count == 0)
-                            radgisticList.Add(new Rgb(rgbList[i].R, rgbList[i].G, rgbList[i].B,
-                                rgbList[i].X, rgbList[i].Y, zArray[i], i));
+//                        if (radgisticList.Count == 0)
+  //                          radgisticList.Add(new Rgb(rgbList[i].R, rgbList[i].G, rgbList[i].B,
+    //                            rgbList[i].X, rgbList[i].Y, zArray[i], i));
 
-                        for (var j = 0; j < radgisticList.Count; j++)
+      //                  for (var j = 0; j < radgisticList.Count; j++)
                         {
-                                if (IsBeside((int)radgisticList[j].X, (int)radgisticList[j].Y,
-                                    (int)rgbList[i].X,(int)rgbList[i].Y,
-                                    2))
+                          ////      if (IsBeside((int)radgisticList[j].X, (int)radgisticList[j].Y,
+                           //         (int)rgbList[i].X,(int)rgbList[i].Y,
+                           //         searchSensivity))
                             {
                                 var r = rgbList[i].R;
                                 var g = rgbList[i].G;
                                 var b = rgbList[i].B;
 
                                 radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
-                                break;
                             }
                         }
                     }
                 }
             }
+
+            
+            //cool method 0
+            /*
+            var searchSensivity0 = 2;
+            var lowSensivity0 = 0;
+            var highSensivity0 = 70;
 
             for (var i = 0; i < zArray.Length; i++)
             {
                 if (diffs.Length > 0)
                 {
-                    if (zArray[i] > diffs[0] - 50 && zArray[i] < diffs[0] - 1)
+                    if (zArray[i] > diffs[0] + lowSensivity0 && zArray[i] < diffs[0] + highSensivity0)
                     {
-                        for(var rad = 0; rad < radgisticList.Count; rad++)
-                        {
-                            if (radgisticList[rad].X == rgbList[i].X && radgisticList[rad].Y == rgbList[i].Y)
-                            {
-                                var r = rgbList[i].R;
-                                var g = rgbList[i].G;
-                                var b = rgbList[i].B;
-
-                                radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
-                       //         break;
-                            }
-                        }
+                        radgisticList.Add(new Rgb(
+                            rgbList[i].R,
+                            rgbList[i].G,
+                            rgbList[i].B,
+                            rgbList[i].X, rgbList[i].Y, zArray[i], i));
                     }
                 }
             }
+            */
 
             foreach (var rad in radgisticList)
             {
