@@ -1,18 +1,8 @@
-﻿//------------------------------------------------------------------
-// (c) Copywrite Jianzhong Zhang
-// This code is under The Code Project Open License
-// Please read the attached license document before using this class
-//------------------------------------------------------------------
-
-// window class for testing 3d chart using WPF
-// version 0.1
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,12 +11,13 @@ using Microsoft.Win32;
 using WPFImageAnalyzer;
 using SysDrawing = System.Drawing;
 
+// ReSharper disable once CheckNamespace
 namespace WPFChart3D
 {
     public partial class MainWindow : Window
     {
         // transform class object for rotate the 3d model
-        private TransformMatrix _mTransformMatrix = new TransformMatrix();
+        private readonly TransformMatrix _mTransformMatrix = new TransformMatrix();
 
         // ***************************** 3d chart ***************************
         private Chart3D _m_3DChart;       // data for 3d chart
@@ -35,20 +26,22 @@ namespace WPFChart3D
         public int MnScatterPlotDataNo = 5000;     // total data number of the scatter plot
 
         // ***************************** selection rect ***************************
-        ViewportRect m_selectRect = new ViewportRect();
-        public int m_nRectModelIndex = -1;
+        readonly ViewportRect _mSelectRect = new ViewportRect();
+        public int MnRectModelIndex = -1;
 
-        private string filePath = String.Empty;
+        private bool imageSetted = false;
+        private string _filePath = string.Empty;
+        private string newFileName = String.Empty;
 
         public MainWindow()
         {
             InitializeComponent();
 
             // selection rect
-            m_selectRect.SetRect(new Point(-0.5, -0.5), new Point(-0.5, -0.5));
-            var model3d = new Model3D();
-            var meshs = m_selectRect.GetMeshes();
-            m_nRectModelIndex = model3d.UpdateModel(meshs, null, m_nRectModelIndex, mainViewport);
+            _mSelectRect.SetRect(new Point(-0.5, -0.5), new Point(-0.5, -0.5));
+            var model3D = new Model3D();
+            var meshs = _mSelectRect.GetMeshes();
+            MnRectModelIndex = model3D.UpdateModel(meshs, null, MnRectModelIndex, mainViewport);
             // display surface chart
             TestScatterPlot(1000);
             TransformChart();
@@ -95,11 +88,11 @@ namespace WPFChart3D
             UpdateModelSizeInfo(meshs);
 
             // 6. display scatter plot in Viewport3D
-            var model3d = new Model3D();
-            MnChartModelIndex = model3d.UpdateModel(meshs, null, MnChartModelIndex, mainViewport);
+            var model3D = new Model3D();
+            MnChartModelIndex = model3D.UpdateModel(meshs, null, MnChartModelIndex, mainViewport);
  
             // 7. set projection matrix
-            float viewRange = nDataRange;
+            var viewRange = nDataRange;
             _mTransformMatrix.CalculateProjectionMatrix(0, viewRange, 0, viewRange, 0, viewRange, 0.5);
             TransformChart();
         }
@@ -113,8 +106,8 @@ namespace WPFChart3D
 
             // 2. set the properties of each dot
             var randomObject = new Random();
-            var nDataRange = 200;
-            for (int i = 0; i < nDotNo; i++)
+            const int nDataRange = 200;
+            for (var i = 0; i < nDotNo; i++)
             {
                 var plotItem = new ScatterPlotItem
                 {
@@ -144,11 +137,11 @@ namespace WPFChart3D
             UpdateModelSizeInfo(meshs);
 
             // 6. show 3D scatter plot in Viewport3d
-            var model3d = new Model3D();
-            MnChartModelIndex = model3d.UpdateModel(meshs, null, MnChartModelIndex, mainViewport);
+            var model3D = new Model3D();
+            MnChartModelIndex = model3D.UpdateModel(meshs, null, MnChartModelIndex, mainViewport);
 
             // 7. set projection matrix
-            float viewRange = nDataRange;
+            var viewRange = nDataRange;
             _mTransformMatrix.CalculateProjectionMatrix(0, viewRange, 0, viewRange, 0, viewRange, 0.5);
             TransformChart();
         }
@@ -162,7 +155,7 @@ namespace WPFChart3D
             }
             else if (args.ChangedButton == MouseButton.Right)   // select rect
             {
-                m_selectRect.OnMouseDown(pt, mainViewport, m_nRectModelIndex);
+                _mSelectRect.OnMouseDown(pt, mainViewport, MnRectModelIndex);
             }
         }
 
@@ -178,7 +171,7 @@ namespace WPFChart3D
             }
             else if (args.RightButton == MouseButtonState.Pressed)          // select rect
             {
-                m_selectRect.OnMouseMove(pt, mainViewport, m_nRectModelIndex);
+                _mSelectRect.OnMouseMove(pt, mainViewport, MnRectModelIndex);
             }
         }
 
@@ -197,7 +190,7 @@ namespace WPFChart3D
                 if (meshGeometry == null) return;
               
                 // 2. set selection in 3d chart
-                _m_3DChart.Select(m_selectRect, _mTransformMatrix, mainViewport);
+                _m_3DChart.Select(_mSelectRect, _mTransformMatrix, mainViewport);
 
                 // 3. update selection display
                 _m_3DChart.HighlightSelection(meshGeometry, Color.FromRgb(200, 200, 200));
@@ -211,18 +204,18 @@ namespace WPFChart3D
             TransformChart();
         }
 
-        private void UpdateModelSizeInfo(ArrayList meshs)
+        private void UpdateModelSizeInfo(IList meshs)
         {
             var nMeshNo = meshs.Count;
             var nChartVertNo = 0;
             var nChartTriangelNo = 0;
-            for (int i = 0; i < nMeshNo; i++)
+            for (var i = 0; i < nMeshNo; i++)
             {
                 nChartVertNo += ((Mesh3D)meshs[i]).GetVertexNo();
                 nChartTriangelNo += ((Mesh3D)meshs[i]).GetTriangleNo();
             }
-            labelVertNo.Content = String.Format("Vertex No: {0:d}", nChartVertNo);
-            labelTriNo.Content = String.Format("Triangle No: {0:d}", nChartTriangelNo);
+            labelVertNo.Content = $"Vertex No: {nChartVertNo:d}";
+            labelTriNo.Content = $"Triangle No: {nChartTriangelNo:d}";
         }
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
@@ -237,7 +230,16 @@ namespace WPFChart3D
             if (op.ShowDialog() == true)
             {
                 imgPhoto.Source = new BitmapImage(new Uri(op.FileName));
-                filePath = op.FileName;
+                _filePath = op.FileName;
+                
+                    var dir = System.IO.Path.GetDirectoryName(_filePath);
+                    var name = System.IO.Path.GetFileNameWithoutExtension(_filePath);
+                    var exten = System.IO.Path.GetExtension(_filePath);
+
+                    if (dir == null) return;
+                    newFileName = dir + "\\temp\\" + name + DateTime.Now.Millisecond + exten;
+                    imageSetted = true;
+                
             }
         }
 
@@ -245,78 +247,17 @@ namespace WPFChart3D
         private void TransformChart()
         {
             if (MnChartModelIndex == -1) return;
-            var visual3d = (ModelVisual3D)(mainViewport.Children[MnChartModelIndex]);
-            if (visual3d.Content == null) return;
-            var group1 = visual3d.Content.Transform as Transform3DGroup;
+            var visual3D = (ModelVisual3D)(mainViewport.Children[MnChartModelIndex]);
+            var group1 = visual3D.Content?.Transform as Transform3DGroup;
+            if (group1 == null) return;
             group1.Children.Clear();
             group1.Children.Add(new MatrixTransform3D(_mTransformMatrix.m_totalMatrix));
         }
         
-        private DateTime downTime;
-        private object downSender;
-        private void imgPhoto_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                downSender = sender;
-                downTime = DateTime.Now;
-            }
-        }
-
-        private void imgPhoto_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Released && sender == downSender)
-            {
-                var timeSinceDown = DateTime.Now - downTime;
-                if (timeSinceDown.TotalMilliseconds < 100)
-                {
-                    var img = imgPhoto.Source as BitmapSource;
-                    var stride = img.PixelWidth * 4;
-                    var size = img.PixelHeight * stride;
-                    byte[] pixels = new byte[size];
-                    img.CopyPixels(pixels, stride, 0);
-
-                    var downPosition = e.GetPosition(sender as Image);
-                    int index = (int)downPosition.Y * stride + 4 * (int)downPosition.X;
-
-                    /*
-                    byte blue = pixels[index];       //exactly red?
-                    byte green = pixels[index + 1];
-                    byte red = pixels[index + 2];    //exactly blue?
-                    byte alpha = pixels[index + 3];
-                    */
-                    var rect = new Rect(downPosition.X, downPosition.Y, 10, 10);
-
-                    var points = new List<Point>();
-                    
-                    var bmp = new SysDrawing.Bitmap(filePath);
-                    
-                    for (var i = 0; i < bmp.Size.Height; i++)
-                        for (var j = 0; j < bmp.Size.Width; j++)
-                        {
-                            if (rect.Contains(new Point(j, i)))
-                            {
-                                points.Add(new Point(j, i));
-                            }
-                        }
-                    
-                    var rgbList = (from point in points let indexer = (int) point.Y*stride + 4*(int) point.X
-                                   select new Rgb(pixels[indexer + 2], pixels[indexer + 1], pixels[indexer], point.X, point.Y)).ToList();
-                    if (checkBoxUse_Shape.IsChecked == true)
-                    {
-                        DrawScatterPlot(rgbList);
-                    }
-                    else if (checkBoxUse_Surface.IsChecked == true)
-                    {
-                        DrawSurfacePlot(rgbList);
-                    }
-                }
-            }
-        }
-
         // function for testing 3d scatter plot
         public void DrawScatterPlot(List<Rgb> rgbList)
         {
+            if (rgbList == null) throw new ArgumentNullException(nameof(rgbList));
             // 1. set scatter chart data no.
             _m_3DChart = new ScatterChart3D();
             _m_3DChart.SetDataNo(rgbList.Count);
@@ -330,7 +271,6 @@ namespace WPFChart3D
                 var r = rgbList[i].R;
                 var g = rgbList[i].G;
                 var b = rgbList[i].B;
-
 
                 zArray[i] = (float)(Math.Sqrt(Math.Pow(r + 512, 2) + Math.Pow(g + 256, 2) + b * b));
     //            zArray[i] = (float)(Math.Sqrt(Math.Pow(r, 2) + Math.Pow(g, 2) + b * b));
@@ -346,14 +286,13 @@ namespace WPFChart3D
             var percents = StaticInterfaceHandler.GetSplitterArray(this);
             var diffs = ToDiffArray(percents, onePercent, zMin);
 
-            zArray = SortByDiffs(zArray, diffs, Int32.Parse(splitterBackage.Text), new[]
+            zArray = SortByDiffs(zArray, diffs, int.Parse(splitterBackage.Text), new[]
             {
                 CheckBoxInvisible.IsChecked != null && CheckBoxInvisible.IsChecked.Value,
                 CheckBoxInvisible1.IsChecked != null && CheckBoxInvisible1.IsChecked.Value,
                 CheckBoxInvisible2.IsChecked != null && CheckBoxInvisible2.IsChecked.Value,
                 CheckBoxInvisible3.IsChecked != null && CheckBoxInvisible3.IsChecked.Value
             });
-
 
             //------------------------------------------------------------------------------------------------//
 
@@ -366,8 +305,8 @@ namespace WPFChart3D
 
                 var plotItem = new ScatterPlotItem
                 {
-                    w = 0.4f,
-                    h = 0.4f
+                    w = 1,
+                    h = 1
                 };
 
                 var r = rgbList[i].R;
@@ -382,98 +321,17 @@ namespace WPFChart3D
 
                 plotItem.shape = (int) Chart3D.Shape.Cylinder;
 
-
-                //Region for contur drawing
-                if (diffs.Length > 0)
-                {
-                    if (zArray[i] > diffs[0] - 1 && zArray[i] < diffs[0])
-                    {
-                        if (radgisticList.Count == 0)
-                            radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
-                        for (var j = 0; j < radgisticList.Count; j++)
-                        {
-                            if (radgisticList[j].X != rgbList[i].X && radgisticList[j].Y != rgbList[i].Y)
-                            {
-                                radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        plotItem.color = Color.FromRgb(r, g, b);
-                        ((ScatterChart3D)_m_3DChart).SetVertex(i, plotItem);
-                    }
-                }
-                else
-                {
-                    plotItem.color = Color.FromRgb(r, g, b);
-                    ((ScatterChart3D) _m_3DChart).SetVertex(i, plotItem);
-                }
+                plotItem.color = Color.FromRgb(r, g, b);
+                ((ScatterChart3D) _m_3DChart).SetVertex(i, plotItem);
             }
-
-            //для каждой точки на оси z мы ищем соседние - если не нашли - 
-            //ищем точки, который рямом с этой, но уже на оси z+-1
-            //и так далее z+-2, z+-3, z+-4, ...
-            //если выше точек нет - не ищем по этой оси z
-            //нашли что возле каждой точки есть соседняя
-            //??????????????????????????????????????????
-            //PROFIT
-
-            var searchSensivity = 2;
-            var lowSensivity = 0;//0;
-            var highSensivity = zArray.Max() - diffs[0];//;
-
-            for(var i = 0; i < zArray.Length; i++)
-            {
-                //Region for contur drawing
-                if (diffs.Length > 0)
-                {
-                    if (zArray[i] > diffs[0] + lowSensivity && zArray[i] < diffs[0] + highSensivity)
-                    {
-//                        if (radgisticList.Count == 0)
-  //                          radgisticList.Add(new Rgb(rgbList[i].R, rgbList[i].G, rgbList[i].B,
-    //                            rgbList[i].X, rgbList[i].Y, zArray[i], i));
-
-      //                  for (var j = 0; j < radgisticList.Count; j++)
-                        {
-                          ////      if (IsBeside((int)radgisticList[j].X, (int)radgisticList[j].Y,
-                           //         (int)rgbList[i].X,(int)rgbList[i].Y,
-                           //         searchSensivity))
-                            {
-                                var r = rgbList[i].R;
-                                var g = rgbList[i].G;
-                                var b = rgbList[i].B;
-
-                                radgisticList.Add(new Rgb(r, g, b, rgbList[i].X, rgbList[i].Y, zArray[i], i));
-                            }
-                        }
-                    }
-                }
-            }
-
             
-            //cool method 0
-            /*
-            var searchSensivity0 = 2;
-            var lowSensivity0 = 0;
-            var highSensivity0 = 70;
-
-            for (var i = 0; i < zArray.Length; i++)
+            if (diffs.Length > 0)
             {
-                if (diffs.Length > 0)
-                {
-                    if (zArray[i] > diffs[0] + lowSensivity0 && zArray[i] < diffs[0] + highSensivity0)
-                    {
-                        radgisticList.Add(new Rgb(
-                            rgbList[i].R,
-                            rgbList[i].G,
-                            rgbList[i].B,
-                            rgbList[i].X, rgbList[i].Y, zArray[i], i));
-                    }
-                }
+                const int lowSensivity = 0;
+                var highSensivity = zArray.Max() - diffs[0];
+
+                radgisticList.AddRange(GetBordersLine(zArray, rgbList, diffs, lowSensivity, highSensivity));
             }
-            */
 
             foreach (var rad in radgisticList)
             {
@@ -490,116 +348,80 @@ namespace WPFChart3D
                 ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
             }
 
-            // 3. set the axes
             _m_3DChart.GetDataRange();
             _m_3DChart.SetAxes();
 
-            // 4. get Mesh3D array from the scatter plot
             var meshs = ((ScatterChart3D)_m_3DChart).GetMeshes();
 
-            // 5. display model vertex no and triangle no
             UpdateModelSizeInfo(meshs);
 
-            // 6. display scatter plot in Viewport3D
             var model3D = new Model3D();
             MnChartModelIndex = model3D.UpdateModel(meshs, null, MnChartModelIndex, mainViewport);
 
-            // 7. set projection matrix
             var viewRange = (float)nDataRange;
             _mTransformMatrix.CalculateProjectionMatrix(0, viewRange, 0, viewRange, 0, viewRange, 0.5);
             TransformChart();
+
+            SetEditedPicture(radgisticList, rgbList);
         }
 
-        private bool IsBeside(int fX, int fY, int sX, int sY, int sensivity)
+        private void SetEditedPicture(IList<Rgb> radgisticList, IList<Rgb> rgbList)
         {
-            if (fX - sensivity == sX && fY == sY)
-                return true;
-            if (fX + sensivity == sX && fY == sY)
-                return true;
-            if (fX == sX && fY - sensivity == sY)
-                return true;
-            if (fX == sX && fY + sensivity == sY)
-                return true;
-            if (fX - sensivity == sX && fY + sensivity == sY)
-                return true;
-            if (fX - sensivity == sX && fY - sensivity == sY)
-                return true;
-            if (fX + sensivity == sX && fY + sensivity == sY)
-                return true;
-            if (fX + sensivity == sX && fY - sensivity == sY)
-                return true;
-            return false;
-        }
-
-        // function for testing surface chart
-        public void DrawSurfacePlot(List<Rgb> rgbList)
-        {
-            var nXNo = rgbList.Count;
-            var nYNo = rgbList.Count;
-            // 1. set the surface grid
-            _m_3DChart = new UniformSurfaceChart3D();
-            ((UniformSurfaceChart3D)_m_3DChart).SetGridRgb(rgbList, nXNo, nYNo, -100, 100, -100, 100);
-
-            // 2. set surface chart z value
-            var xC = _m_3DChart.XCenter();
-            var yC = _m_3DChart.YCenter();
-            var nVertNo = _m_3DChart.GetDataNo();
-            for (var i = 0; i < nVertNo; i++)
+            foreach (var rad in radgisticList)
             {
-                var vert = _m_3DChart[i];
-
-                var r = 0.15 * Math.Sqrt((vert.x - xC) * (vert.x - xC) + (vert.y - yC) * (vert.y - yC));
-                double zV;
-                if (r < 1e-10) zV = 1;
-                else zV = Math.Sin(r) / r;
-
-                _m_3DChart[i].z = (float)zV;
+                rgbList[rad.Possition] = new Rgb(rad.A, rad.R, rad.G, rad.B, rad.X, rad.Y, rad.Z, rad.Possition);
             }
-            _m_3DChart.GetDataRange();
+            
+            var bmp = new SysDrawing.Bitmap(_filePath);
 
-            // 3. set the surface chart color according to z vaule
-            var zMin = _m_3DChart.ZMin();
-            var zMax = _m_3DChart.ZMax();
-            for (int i = 0; i < nVertNo; i++)
+            foreach (var rgb in radgisticList)
             {
-                var vert = _m_3DChart[i];
-                var h = (vert.z - zMin) / (zMax - zMin);
+                bmp.SetPixel((int)rgb.X, (int)rgb.Y, SysDrawing.Color.FromArgb(255, 0, 0));
+            }
+            
+            bmp.Save(newFileName);
 
-                var color = new Color(); // TextureMapping.PseudoColor(h);
-                if (i >= rgbList.Count)
-                    color = Color.FromRgb(0, 0, 0);
-                else
+            var logo = new BitmapImage();
+            logo.BeginInit();
+            logo.UriSource = new Uri(newFileName);
+            logo.EndInit();
+
+            imgTest.Source = logo;
+        }
+
+        private static IEnumerable<Rgb> GetBordersLine(
+            IReadOnlyList<float> zArray, 
+            IReadOnlyList<Rgb> rgbList, 
+            IReadOnlyList<float> diffs, 
+            float lowSensivity, 
+            float highSensivity)
+        {
+            var radgisticList = new List<Rgb>();
+
+            if (diffs.Count <= 0) return radgisticList;
+            for (var i = 0; i < zArray.Count; i++)
+            {
+                if (zArray[i] > diffs[0] + lowSensivity && zArray[i] < diffs[0] + highSensivity)
                 {
-                    color.R = rgbList[i].R;
-                    color.G = rgbList[i].G;
-                    color.B = rgbList[i].B;
+                    radgisticList.Add(new Rgb(
+                        rgbList[i].A,
+                        rgbList[i].R,
+                        rgbList[i].G,
+                        rgbList[i].B,
+                        rgbList[i].X,
+                        rgbList[i].Y,
+                        zArray[i],
+                        i));
                 }
-                _m_3DChart[i].color = color;
             }
-
-            // 4. Get the Mesh3D array from surface chart
-            var meshs = ((UniformSurfaceChart3D)_m_3DChart).GetMeshes();
-
-            // 5. display vertex no and triangle no of this surface chart
-            UpdateModelSizeInfo(meshs);
-
-            // 6. Set the model display of surface chart
-            var model3d = new Model3D();
-            var backMaterial = new DiffuseMaterial(new SolidColorBrush(Colors.Gray));
-            MnChartModelIndex = model3d.UpdateModel(meshs, backMaterial, MnChartModelIndex, mainViewport);
-
-            // 7. set projection matrix, so the data is in the display region
-            var xMin = _m_3DChart.XMin();
-            var xMax = _m_3DChart.XMax();
-            _mTransformMatrix.CalculateProjectionMatrix(xMin, xMax, xMin, xMax, zMin, zMax, 0.5);
-            TransformChart();
+            return radgisticList;
         }
-
-        private float[] ToDiffArray(int[] percentageArray, float percent, float min)
+        
+        private static float[] ToDiffArray(IReadOnlyList<int> percentageArray, float percent, float min)
         {
-            var diffArray = new float[percentageArray.Length];
+            var diffArray = new float[percentageArray.Count];
 
-            for (int i = 0; i < percentageArray.Length; i++)
+            for (var i = 0; i < percentageArray.Count; i++)
             {
                 diffArray[i] = percent * percentageArray[i] + min;
             }
@@ -615,30 +437,36 @@ namespace WPFChart3D
 
         public void DrawScatterAllImagePlot()
         {
-            var bmp = new SysDrawing.Bitmap(filePath);
+            var bmp = new SysDrawing.Bitmap(_filePath);
             var points = new List<Point>();
             var img = imgPhoto.Source as BitmapSource;
-            var stride = img.PixelWidth * 4;
-            var size = img.PixelHeight * stride;
+            if (img != null)
+            {
+                var stride = img.PixelWidth * 4;
+                var size = img.PixelHeight * stride;
 
-            for (int i = 0; i < bmp.Size.Height; i++)
-                for (int j = 0; j < bmp.Size.Width; j++)
+                for (var i = 0; i < bmp.Size.Height; i++)
+                    for (var j = 0; j < bmp.Size.Width; j++)
                         points.Add(new Point(j, i));
 
-            var pixels = new byte[size];
-            img.CopyPixels(pixels, stride, 0);
+                var pixels = new byte[size];
+                img.CopyPixels(pixels, stride, 0);
 
-            var rgbList = (from point in points let indexer = (int) point.Y*stride + 4*(int) point.X
-                           select new Rgb(pixels[indexer + 2], pixels[indexer + 1], pixels[indexer], point.X, point.Y)).ToList();
-            DrawScatterPlot(rgbList);
+                var rgbList = (from point in points
+                               let indexer = (int) point.Y*stride + 4*(int) point.X
+                               select new Rgb(pixels[indexer + 3], pixels[indexer + 2], pixels[indexer + 1], pixels[indexer], point.X, point.Y)
+                               ).ToList();
+
+                DrawScatterPlot(rgbList);
+            }
             GC.Collect();
         }
 
-        private float[] SortByDiffs(float[] zArray, float[] diffs, int breakage, bool[] invisible)
+        private static float[] SortByDiffs(float[] zArray, IReadOnlyList<float> diffs, int breakage, IReadOnlyList<bool> invisible)
         {
             for (var i = 0; i < zArray.Length; i++)//:((
             {
-                if (diffs.Length == 1)
+                if (diffs.Count == 1)
                 {
                     if (zArray[i] > diffs[0])
                     {
@@ -648,7 +476,7 @@ namespace WPFChart3D
                             zArray[i] = zArray[i] + breakage;
                     }
                 }
-                if (diffs.Length == 2)
+                if (diffs.Count == 2)
                 {
                     if (zArray[i] > diffs[0] && zArray[i] <= diffs[1])
                     {
@@ -665,7 +493,7 @@ namespace WPFChart3D
                             zArray[i] = zArray[i] + breakage;
                     }
                 }
-                if (diffs.Length == 3)
+                if (diffs.Count == 3)
                 {
                     if (zArray[i] > diffs[0] && zArray[i] <= diffs[1])
                     {
@@ -689,7 +517,7 @@ namespace WPFChart3D
                             zArray[i] = zArray[i] + breakage;
                     }
                 }
-                if (diffs.Length == 4)
+                if (diffs.Count == 4)
                 {
                     if (zArray[i] > diffs[0] && zArray[i] <= diffs[1])
                     {
@@ -744,6 +572,7 @@ namespace WPFChart3D
 
     public class Rgb
     {
+        public byte A;
         public byte R;
         public byte G;
         public byte B;
@@ -752,8 +581,9 @@ namespace WPFChart3D
         public double Z;
         public int Possition;
 
-        public Rgb(byte r, byte g, byte b, double x, double y)
+        public Rgb(byte a, byte r, byte g, byte b, double x, double y)
         {
+            A = 100;
             R = r;
             G = g;
             B = b;
@@ -762,8 +592,9 @@ namespace WPFChart3D
             Y = y;
         }
 
-        public Rgb(byte r, byte g, byte b, double x, double y, double z, int poss)
+        public Rgb(byte a, byte r, byte g, byte b, double x, double y, double z, int poss)
         {
+            A = a;
             R = r;
             G = g;
             B = b;

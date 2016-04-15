@@ -81,21 +81,18 @@
             	Foreground="DarkBlue" 
             	Canvas.Top="101"
             	Height="446">
-                <Canvas Height="57" Margin="0,122,0,50">
+                <Canvas Margin="0,221,0,-1">
 
-                    <Label x:Name="label" Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="115" Canvas.Top="-239" RenderTransformOrigin="0.5,0.5">
+                    <Label x:Name="label" Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="115" Canvas.Top="-239" RenderTransformOrigin="0.5,0.5"></Label>
 
-                    </Label>
-                    <CheckBox Canvas.Left="10" Canvas.Top="10" Height="16" x:Name="checkBoxUse_Shape" Width="120" Content="Use Shape" />
-                    <CheckBox Canvas.Left="10" Canvas.Top="26" Height="16" x:Name="checkBoxUse_Surface" Width="120" Content="Use Sufrace" />
                     <Button Height="23" HorizontalAlignment="Left"  Name="btnLoad" VerticalAlignment="Bottom" 
-        Width="85" Grid.Column="1" Click="btnLoad_Click" Canvas.Left="1" Canvas.Top="63">_Load</Button>
-                    <Button x:Name="scatterButton_Copy" Click="scatterAllImageButton_Click" Content="Draw all image" Canvas.Left="1" Canvas.Top="91" />
-                    <TextBox Height="22" Name="splitterPersentage" Width="91" Canvas.Left="1" Canvas.Top="-214" Text="50" />
+        Width="85" Grid.Column="1" Click="btnLoad_Click" Canvas.Left="7" Canvas.Top="-76">_Load</Button>
+                    <Button x:Name="scatterButton_Copy" Click="scatterAllImageButton_Click" Content="Draw" Canvas.Left="7" Canvas.Top="-48" Width="85" />
+                    <TextBox Height="22" Name="splitterPersentage" Width="91" Canvas.Left="1" Canvas.Top="-214" Text="80" />
                     <TextBox Height="22" x:Name="splitterPersentage1" Width="91" Canvas.Left="1" Canvas.Top="-187" Text="50" />
-                    <TextBox Height="22" x:Name="splitterPersentage2" Width="91" Canvas.Left="1" Canvas.Top="-160" Text="50" />
-                    <TextBox Height="22" x:Name="splitterPersentage3" Width="91" Canvas.Left="1" Canvas.Top="-133" Text="50" />
-                    <TextBox Height="22" x:Name="splitterBackage" Width="33" Canvas.Left="97" Canvas.Top="-106" Text="50" />
+                    <TextBox Height="22" x:Name="splitterPersentage2" Width="91" Canvas.Left="1" Canvas.Top="-160" Text="25" />
+                    <TextBox Height="22" x:Name="splitterPersentage3" Width="91" Canvas.Left="1" Canvas.Top="-133" Text="12" />
+                    <TextBox Height="22" x:Name="splitterBackage" Width="33" Canvas.Left="97" Canvas.Top="-106" Text="0" />
                     <CheckBox Canvas.Left="97" Canvas.Top="-208" Height="16" x:Name="CheckBoxPersentage" Width="13" Content="" />
                     <CheckBox Canvas.Left="97" Canvas.Top="-181" Height="16" x:Name="CheckBoxPersentage1" Width="13" Content="" />
                     <CheckBox Canvas.Left="97" Canvas.Top="-154" Height="16" x:Name="CheckBoxPersentage2" Width="13" Content="" />
@@ -109,8 +106,9 @@
             </GroupBox>
         </Canvas>
 
-        <Image Margin="12,12,956,495" Name="imgPhoto" 
-        Stretch="None" Grid.Column="1" MouseDown ="imgPhoto_MouseDown" 
-               MouseUp="imgPhoto_MouseUp"/>
+        <Image Margin="12,12,826,429" Name="imgPhoto" 
+        Stretch="Uniform" Grid.Column="1" />
+        <Image Margin="12,130,826,311" Name="imgTest" 
+        Stretch="Uniform" Grid.Column="1"/>
     </Grid>
 </Window>
