@@ -108,7 +108,7 @@
 
         <Image Margin="12,12,826,429" Name="imgPhoto" 
         Stretch="Uniform" Grid.Column="1" />
-        <Image Margin="12,130,826,311" Name="imgTest" 
+        <Image Margin="12,218,826,223" Name="imgTest" 
         Stretch="Uniform" Grid.Column="1"/>
     </Grid>
 </Window>

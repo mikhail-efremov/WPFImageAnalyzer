@@ -1,17 +1,8 @@
-﻿//------------------------------------------------------------------
-// (c) Copywrite Jianzhong Zhang
-// This code is under The Code Project Open License
-// Please read the attached license document before using this class
-//------------------------------------------------------------------
-
-// class of a special surface chart, (uniform grid in x-y direction)
-// version 0.1
-
-
-using System.Collections;
+﻿using System.Collections;
 using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using System.Collections.Generic;
+using WPFImageAnalyzer;
 
 namespace WPFChart3D
 {

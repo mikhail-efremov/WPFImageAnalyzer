@@ -16,6 +16,23 @@ namespace WPFChart3D
 {
     public partial class MainWindow : Window
     {
+        //fix it :((
+        private byte red0 = 255;
+        private byte blue0 = 0;
+        private byte green0 = 0;
+
+        private byte red1 = 255;
+        private byte blue1 = 85;
+        private byte green1= 85;
+        
+        private byte red2 = 255;
+        private byte blue2 = 175;
+        private byte green2 = 175;
+
+        private byte red3 = 255;
+        private byte blue3 = 255;
+        private byte green3 = 255;
+
         // transform class object for rotate the 3d model
         private readonly TransformMatrix _mTransformMatrix = new TransformMatrix();
 
@@ -29,9 +46,8 @@ namespace WPFChart3D
         readonly ViewportRect _mSelectRect = new ViewportRect();
         public int MnRectModelIndex = -1;
 
-        private bool imageSetted = false;
+        private bool _imageSetted = false;
         private string _filePath = string.Empty;
-        private string newFileName = String.Empty;
 
         public MainWindow()
         {
@@ -231,15 +247,21 @@ namespace WPFChart3D
             {
                 imgPhoto.Source = new BitmapImage(new Uri(op.FileName));
                 _filePath = op.FileName;
-                
-                    var dir = System.IO.Path.GetDirectoryName(_filePath);
-                    var name = System.IO.Path.GetFileNameWithoutExtension(_filePath);
-                    var exten = System.IO.Path.GetExtension(_filePath);
+            }
+        }
 
-                    if (dir == null) return;
-                    newFileName = dir + "\\temp\\" + name + DateTime.Now.Millisecond + exten;
-                    imageSetted = true;
-                
+        private string SetNewFileName(string oldFileName)
+        {
+            var dir = System.IO.Path.GetDirectoryName(oldFileName);
+            var name = System.IO.Path.GetFileNameWithoutExtension(oldFileName);
+            var exten = System.IO.Path.GetExtension(oldFileName);
+
+            while (true)
+            {
+                var newFileName = dir + "\\temp\\" + name + DateTime.Now.Millisecond + exten;
+                _imageSetted = true;
+                if (!System.IO.File.Exists(newFileName))
+                    return newFileName;
             }
         }
 
@@ -296,7 +318,7 @@ namespace WPFChart3D
 
             //------------------------------------------------------------------------------------------------//
 
-            var radgisticList = new List<Rgb>();
+            var rgbCortage = new RgbCortage();
             for (var i = 0; i < rgbList.Count; i++)
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -324,28 +346,41 @@ namespace WPFChart3D
                 plotItem.color = Color.FromRgb(r, g, b);
                 ((ScatterChart3D) _m_3DChart).SetVertex(i, plotItem);
             }
-            
-            if (diffs.Length > 0)
+
+            foreach (var diff in diffs)
             {
                 const int lowSensivity = 0;
-                var highSensivity = zArray.Max() - diffs[0];
+                var highSensivity = zArray.Max() - diff;
 
-                radgisticList.AddRange(GetBordersLine(zArray, rgbList, diffs, lowSensivity, highSensivity));
+                rgbCortage.RegisterNewContainer(GetBordersLine(zArray, rgbList, diff, lowSensivity, highSensivity));
             }
 
-            foreach (var rad in radgisticList)
+            foreach (var container in rgbCortage.Container)
             {
-                var plotItem = new ScatterPlotItem
+                foreach (var rad in container)
                 {
-                    w = 1,
-                    h = 1,
-                    x = (float) rad.X,
-                    y = (float) rad.Y,
-                    z = (float) rad.Z - 500,
-                    shape = (int) Chart3D.Shape.Cylinder,
-                    color = Color.FromRgb(255, 50, 50)
-                };
-                ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
+                    var color = new Color();
+                    if (container.Equals(rgbCortage.Container[0]))
+                        color = Color.FromRgb(red0, green0, blue0);
+                    else if (container.Equals(rgbCortage.Container[1]))
+                        color = Color.FromRgb(red1, green1, blue1);
+                    else if (container.Equals(rgbCortage.Container[2]))
+                        color = Color.FromRgb(red2, green2, blue2);
+                    else if (container.Equals(rgbCortage.Container[3]))
+                        color = Color.FromRgb(red3, green3, blue3);
+
+                    var plotItem = new ScatterPlotItem
+                    {
+                        w = 1,
+                        h = 1,
+                        x = (float) rad.X,
+                        y = (float) rad.Y,
+                        z = (float) rad.Z - 500,
+                        shape = (int) Chart3D.Shape.Cylinder,
+                        color = color
+                    };
+                    ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
+                }
             }
 
             _m_3DChart.GetDataRange();
@@ -362,23 +397,41 @@ namespace WPFChart3D
             _mTransformMatrix.CalculateProjectionMatrix(0, viewRange, 0, viewRange, 0, viewRange, 0.5);
             TransformChart();
 
-            SetEditedPicture(radgisticList, rgbList);
+            SetEditedPicture(rgbCortage, rgbList);
         }
 
-        private void SetEditedPicture(IList<Rgb> radgisticList, IList<Rgb> rgbList)
+        private void SetEditedPicture(RgbCortage rgbCortage, IList<Rgb> rgbList)
         {
-            foreach (var rad in radgisticList)
+            foreach (var container in rgbCortage.Container)
             {
-                rgbList[rad.Possition] = new Rgb(rad.A, rad.R, rad.G, rad.B, rad.X, rad.Y, rad.Z, rad.Possition);
+                foreach (var rad in container)
+                {
+                    rgbList[rad.Possition] = new Rgb(rad.A, rad.R, rad.G, rad.B, rad.X, rad.Y, rad.Z, rad.Possition);
+                }
             }
             
             var bmp = new SysDrawing.Bitmap(_filePath);
 
-            foreach (var rgb in radgisticList)
+            foreach (var container in rgbCortage.Container)
             {
-                bmp.SetPixel((int)rgb.X, (int)rgb.Y, SysDrawing.Color.FromArgb(255, 0, 0));
+                foreach (var rad in container)
+                {
+                    var color = new SysDrawing.Color();
+                    if (container.Equals(rgbCortage.Container[0]))
+                        color = SysDrawing.Color.FromArgb(red0, green0, blue0);
+                    else if (container.Equals(rgbCortage.Container[1]))
+                        color = SysDrawing.Color.FromArgb(red1, green1, blue1);
+                    else if (container.Equals(rgbCortage.Container[2]))
+                        color = SysDrawing.Color.FromArgb(red2, green2, blue2);
+                    else if (container.Equals(rgbCortage.Container[3]))
+                        color = SysDrawing.Color.FromArgb(red3, green3, blue3);
+
+                    bmp.SetPixel((int)rad.X, (int)rad.Y, color);
+                }
             }
             
+            var newFileName = SetNewFileName(_filePath);
+
             bmp.Save(newFileName);
 
             var logo = new BitmapImage();
@@ -392,16 +445,15 @@ namespace WPFChart3D
         private static IEnumerable<Rgb> GetBordersLine(
             IReadOnlyList<float> zArray, 
             IReadOnlyList<Rgb> rgbList, 
-            IReadOnlyList<float> diffs, 
+            float diff,
             float lowSensivity, 
             float highSensivity)
         {
             var radgisticList = new List<Rgb>();
-
-            if (diffs.Count <= 0) return radgisticList;
+            
             for (var i = 0; i < zArray.Count; i++)
             {
-                if (zArray[i] > diffs[0] + lowSensivity && zArray[i] < diffs[0] + highSensivity)
+                if (zArray[i] > diff + lowSensivity && zArray[i] < diff + highSensivity)
                 {
                     radgisticList.Add(new Rgb(
                         rgbList[i].A,
@@ -426,7 +478,6 @@ namespace WPFChart3D
                 diffArray[i] = percent * percentageArray[i] + min;
             }
             Array.Sort(diffArray);
-
             return diffArray;
         }
 
@@ -550,65 +601,6 @@ namespace WPFChart3D
                 }
             }
             return zArray;
-        }
-    }
-
-    public class PossAndDiff
-    {
-        public int Possition;
-        public float Value;
-
-        public PossAndDiff(int possition, float value)
-        {
-            Possition = possition;
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return $"[{Possition}] {Value}";
-        }
-    }
-
-    public class Rgb
-    {
-        public byte A;
-        public byte R;
-        public byte G;
-        public byte B;
-        public double X;
-        public double Y;
-        public double Z;
-        public int Possition;
-
-        public Rgb(byte a, byte r, byte g, byte b, double x, double y)
-        {
-            A = 100;
-            R = r;
-            G = g;
-            B = b;
-
-            X = x;
-            Y = y;
-        }
-
-        public Rgb(byte a, byte r, byte g, byte b, double x, double y, double z, int poss)
-        {
-            A = a;
-            R = r;
-            G = g;
-            B = b;
-
-            X = x;
-            Y = y;
-            Z = z;
-
-            Possition = poss;
-        }
-
-        public override string ToString()
-        {
-            return $"R:{R} G:{G} B{B}";
         }
     }
 }
