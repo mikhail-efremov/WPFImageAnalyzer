@@ -15,7 +15,8 @@ namespace WPFImageAnalyzer
         {
             var nc = new List<Rgb>();
             nc.AddRange(container);
-            Container.Add(nc);
+          //  Container.Insert(0, nc);
+             Container.Add(nc);
         }
     }
 }

@@ -16,23 +16,6 @@ namespace WPFChart3D
 {
     public partial class MainWindow : Window
     {
-        //fix it :((
-        private byte red0 = 255;
-        private byte blue0 = 0;
-        private byte green0 = 0;
-
-        private byte red1 = 255;
-        private byte blue1 = 85;
-        private byte green1= 85;
-        
-        private byte red2 = 255;
-        private byte blue2 = 175;
-        private byte green2 = 175;
-
-        private byte red3 = 255;
-        private byte blue3 = 255;
-        private byte green3 = 255;
-
         // transform class object for rotate the 3d model
         private readonly TransformMatrix _mTransformMatrix = new TransformMatrix();
 
@@ -346,12 +329,18 @@ namespace WPFChart3D
                 plotItem.color = Color.FromRgb(r, g, b);
                 ((ScatterChart3D) _m_3DChart).SetVertex(i, plotItem);
             }
-
-            foreach (var diff in diffs)
+            
+            for (var i = 0; i < diffs.Length; i++)
             {
+                var diff = diffs[i];
+                float maxDiff;
+                if (i == 0)
+                    maxDiff = zArray.Max();
+                else
+                    maxDiff = diffs[i-1] + diff;
                 const int lowSensivity = 0;
-                var highSensivity = zArray.Max() - diff;
-
+                var highSensivity = maxDiff - diff;
+                
                 rgbCortage.RegisterNewContainer(GetBordersLine(zArray, rgbList, diff, lowSensivity, highSensivity));
             }
 
@@ -361,13 +350,21 @@ namespace WPFChart3D
                 {
                     var color = new Color();
                     if (container.Equals(rgbCortage.Container[0]))
-                        color = Color.FromRgb(red0, green0, blue0);
+                    {
+                        if (ColorPicker0.SelectedColor != null) color = (Color)ColorPicker0.SelectedColor;
+                    }
                     else if (container.Equals(rgbCortage.Container[1]))
-                        color = Color.FromRgb(red1, green1, blue1);
+                    {
+                        if (ColorPicker1.SelectedColor != null) color = (Color)ColorPicker1.SelectedColor;
+                    }
                     else if (container.Equals(rgbCortage.Container[2]))
-                        color = Color.FromRgb(red2, green2, blue2);
+                    {
+                        if (ColorPicker2.SelectedColor != null) color = (Color) ColorPicker2.SelectedColor;
+                    }
                     else if (container.Equals(rgbCortage.Container[3]))
-                        color = Color.FromRgb(red3, green3, blue3);
+                    {
+                        if (ColorPicker3.SelectedColor != null) color = (Color) ColorPicker3.SelectedColor;
+                    }
 
                     var plotItem = new ScatterPlotItem
                     {
@@ -412,19 +409,41 @@ namespace WPFChart3D
             
             var bmp = new SysDrawing.Bitmap(_filePath);
 
+            Color sColor0 = new Color();
+            Color sColor1 = new Color();
+            Color sColor2 = new Color();
+            Color sColor3 = new Color();
+
+            if (ColorPicker0.SelectedColor != null)
+            {
+                sColor0 = ColorPicker0.SelectedColor.Value;
+            }
+            if (ColorPicker1.SelectedColor != null)
+            {
+                sColor1 = ColorPicker1.SelectedColor.Value;
+            }
+            if (ColorPicker2.SelectedColor != null)
+            {
+                sColor2 = ColorPicker2.SelectedColor.Value;
+            }
+            if (ColorPicker3.SelectedColor != null)
+            {
+                sColor3 = ColorPicker3.SelectedColor.Value;
+            }
+
             foreach (var container in rgbCortage.Container)
             {
                 foreach (var rad in container)
                 {
                     var color = new SysDrawing.Color();
                     if (container.Equals(rgbCortage.Container[0]))
-                        color = SysDrawing.Color.FromArgb(red0, green0, blue0);
+                        color = SysDrawing.Color.FromArgb(sColor0.R, sColor0.G, sColor0.B);
                     else if (container.Equals(rgbCortage.Container[1]))
-                        color = SysDrawing.Color.FromArgb(red1, green1, blue1);
+                        color = SysDrawing.Color.FromArgb(sColor1.R, sColor1.G, sColor1.B);
                     else if (container.Equals(rgbCortage.Container[2]))
-                        color = SysDrawing.Color.FromArgb(red2, green2, blue2);
+                        color = SysDrawing.Color.FromArgb(sColor2.R, sColor2.G, sColor2.B);
                     else if (container.Equals(rgbCortage.Container[3]))
-                        color = SysDrawing.Color.FromArgb(red3, green3, blue3);
+                        color = SysDrawing.Color.FromArgb(sColor3.R, sColor3.G, sColor3.B);
 
                     bmp.SetPixel((int)rad.X, (int)rad.Y, color);
                 }
