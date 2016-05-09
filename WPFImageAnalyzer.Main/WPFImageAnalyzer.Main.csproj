@@ -101,6 +101,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ModelingElements\StaticDrawUtils.cs" />
+    <Compile Include="PathFinder.cs" />
     <Compile Include="Rgb.cs" />
     <Compile Include="RgbCortage.cs" />
     <Compile Include="StaticInterfaceHandler.cs" />

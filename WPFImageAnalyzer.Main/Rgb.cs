@@ -10,6 +10,7 @@
         public double Y;
         public double Z;
         public int Possition;
+        public int SelectedIndex;
 
         public Rgb(byte a, byte r, byte g, byte b, double x, double y)
         {

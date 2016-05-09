@@ -14,7 +14,7 @@ using SysDrawing = System.Drawing;
 // ReSharper disable once CheckNamespace
 namespace WPFChart3D
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow 
     {
         // transform class object for rotate the 3d model
         private readonly TransformMatrix _mTransformMatrix = new TransformMatrix();
@@ -28,8 +28,7 @@ namespace WPFChart3D
         // ***************************** selection rect ***************************
         readonly ViewportRect _mSelectRect = new ViewportRect();
         public int MnRectModelIndex = -1;
-
-        private bool _imageSetted = false;
+        
         private string _filePath = string.Empty;
 
         public MainWindow()
@@ -242,7 +241,6 @@ namespace WPFChart3D
             while (true)
             {
                 var newFileName = dir + "\\temp\\" + name + DateTime.Now.Millisecond + exten;
-                _imageSetted = true;
                 if (!System.IO.File.Exists(newFileName))
                     return newFileName;
             }
@@ -270,17 +268,7 @@ namespace WPFChart3D
             // 2. set property of each dot (size, position, shape, color)
             var nDataRange = 200;
 
-            var zArray = new float[rgbList.Count];
-            for (var i = 0; i < rgbList.Count; i++)
-            {
-                var r = rgbList[i].R;
-                var g = rgbList[i].G;
-                var b = rgbList[i].B;
-
-                zArray[i] = (float)(Math.Sqrt(Math.Pow(r + 512, 2) + Math.Pow(g + 256, 2) + b * b));
-    //            zArray[i] = (float)(Math.Sqrt(Math.Pow(r, 2) + Math.Pow(g, 2) + b * b));
-            }
-
+            var zArray = GenZList(rgbList);
             //------------------------------------------------------------------------------------------------//
             
             var zMax = zArray.Max();
@@ -348,6 +336,7 @@ namespace WPFChart3D
             {
                 foreach (var rad in container)
                 {
+                    rad.SelectedIndex = 1;
                     var color = new Color();
                     if (container.Equals(rgbCortage.Container[0]))
                     {
@@ -397,13 +386,27 @@ namespace WPFChart3D
             SetEditedPicture(rgbCortage, rgbList);
         }
 
+        private static float[] GenZList(IList<Rgb> rgbList)
+        {
+            var zArray = new float[rgbList.Count];
+            for (var i = 0; i < rgbList.Count; i++)
+            {
+                var r = rgbList[i].R;
+                var g = rgbList[i].G;
+                var b = rgbList[i].B;
+
+                zArray[i] = (float)(Math.Sqrt(Math.Pow(r + 512, 2) + Math.Pow(g + 256, 2) + b * b));
+            }
+            return zArray;
+        }
+
         private void SetEditedPicture(RgbCortage rgbCortage, IList<Rgb> rgbList)
         {
             foreach (var container in rgbCortage.Container)
             {
                 foreach (var rad in container)
                 {
-                    rgbList[rad.Possition] = new Rgb(rad.A, rad.R, rad.G, rad.B, rad.X, rad.Y, rad.Z, rad.Possition);
+                    rgbList[rad.Possition] = rad;
                 }
             }
             
@@ -459,6 +462,9 @@ namespace WPFChart3D
             logo.EndInit();
 
             imgTest.Source = logo;
+
+            var path = new PathFinder();
+            path.Find(rgbList);
         }
 
         private static IEnumerable<Rgb> GetBordersLine(
