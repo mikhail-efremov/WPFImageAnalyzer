@@ -26,7 +26,7 @@ namespace WPFImageAnalyzer
 
                 var done = false;
 
-                FindPath(tdaWrap, x, y);
+#warning                FindPath(tdaWrap, x, y);
             }
             
             Console.Write("");

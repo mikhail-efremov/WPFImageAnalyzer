@@ -86,10 +86,14 @@
                     <Button Height="23" HorizontalAlignment="Left"  x:Name="btnLoad" VerticalAlignment="Bottom" 
 						Width="85" Grid.Column="1" Click="btnLoad_Click" Canvas.Left="7" Canvas.Top="-76" Content="_Load"/>
                     <Button x:Name="scatterButton_Copy" Click="scatterAllImageButton_Click" Content="Draw" Canvas.Left="7" Canvas.Top="-48" Width="85" />
-                    <TextBox Height="22" x:Name="splitterPersentage" Width="91" Canvas.Left="1" Canvas.Top="-214" Text="80" />
-                    <TextBox Height="22" x:Name="splitterPersentage1" Width="91" Canvas.Left="1" Canvas.Top="-187" Text="50" />
-                    <TextBox Height="22" x:Name="splitterPersentage2" Width="91" Canvas.Left="1" Canvas.Top="-160" Text="25" />
-                    <TextBox Height="22" x:Name="splitterPersentage3" Width="91" Canvas.Left="1" Canvas.Top="-133" Text="12" />
+                    <TextBox Height="22" x:Name="splitterPersentage101" Width="34" Canvas.Left="1" Canvas.Top="-214" Text="60" />
+                    <TextBox Height="22" x:Name="splitterPersentage201" Width="34" Canvas.Left="1" Canvas.Top="-187" Text="50" />
+                    <TextBox Height="22" x:Name="splitterPersentage301" Width="34" Canvas.Left="1" Canvas.Top="-160" Text="25" />
+                    <TextBox Height="22" x:Name="splitterPersentage401" Width="34" Canvas.Left="1" Canvas.Top="-133" Text="12" />
+                    <TextBox Height="22" x:Name="splitterPersentage102" Width="34" Canvas.Left="40" Canvas.Top="-214" Text="80" />
+                    <TextBox Height="22" x:Name="splitterPersentage202" Width="34" Canvas.Left="40" Canvas.Top="-187" Text="60" />
+                    <TextBox Height="22" x:Name="splitterPersentage302" Width="34" Canvas.Left="40" Canvas.Top="-160" Text="50" />
+                    <TextBox Height="22" x:Name="splitterPersentage402" Width="34" Canvas.Left="40" Canvas.Top="-133" Text="25" />
                     <TextBox Height="22" x:Name="splitterBackage" Width="33" Canvas.Left="97" Canvas.Top="-106" Text="0" />
                     <CheckBox Canvas.Left="97" Canvas.Top="-208" Height="16" x:Name="CheckBoxPersentage" Width="13" Content="" />
                     <CheckBox Canvas.Left="97" Canvas.Top="-181" Height="16" x:Name="CheckBoxPersentage1" Width="13" Content="" />

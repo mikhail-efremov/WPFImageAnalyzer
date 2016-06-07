@@ -10,56 +10,84 @@ namespace WPFImageAnalyzer
 {
     public static class StaticInterfaceHandler
     {
-        public static int[] GetSplitterArray(MainWindow mainWindow)
+        public static List<Tuple<int, int>> GetSplitterArray(MainWindow mainWindow)
         {
-            var splitterList = new List<int>();
+            var splitterList = new List<Tuple<int,int>>();
 
             if (mainWindow.CheckBoxPersentage.IsChecked == true)
             {
-                int splitter;
-                if (Int32.TryParse(mainWindow.splitterPersentage.Text, out splitter))
+                int splitter01;
+                if (int.TryParse(mainWindow.splitterPersentage101.Text, out splitter01))
                 {
-                    if (splitter > 0 && splitter < 100)
-                        splitterList.Add(splitter);
+                    int splitter02;
+                    if (int.TryParse(mainWindow.splitterPersentage102.Text, out splitter02))
+                    {
+                        if (splitter01 < splitter02)
+                        {
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
+                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                        }
+                    }
                 }
-                else MessageBox.Show("Cannot parse value at 1st textBox. Value have to be int, less then 0" +
-                     "and greater then 0");
+                else MessageBox.Show(@"Cannot parse value at 1st textBox. Value have to be int, less then 0" +
+                     @"and greater then 0");
             }
             if (mainWindow.CheckBoxPersentage1.IsChecked == true)
             {
-                int splitter;
-                if (Int32.TryParse(mainWindow.splitterPersentage1.Text, out splitter))
+                int splitter01;
+                if (int.TryParse(mainWindow.splitterPersentage201.Text, out splitter01))
                 {
-                    if (splitter > 0 && splitter < 100)
-                        splitterList.Add(splitter);
+                    int splitter02;
+                    if (int.TryParse(mainWindow.splitterPersentage202.Text, out splitter02))
+                    {
+                        if (splitter01 < splitter02)
+                        {
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
+                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                        }
+                    }
                 }
-                else MessageBox.Show("Cannot parse value at 2st textBox. Value have to be int, less then 0" +
-                     "and greater then 0");
+                else MessageBox.Show(@"Cannot parse value at 2st textBox. Value have to be int, less then 0" +
+                     @"and greater then 0");
             }
             if (mainWindow.CheckBoxPersentage2.IsChecked == true)
             {
-                int splitter;
-                if (Int32.TryParse(mainWindow.splitterPersentage2.Text, out splitter))
+                int splitter01;
+                if (int.TryParse(mainWindow.splitterPersentage301.Text, out splitter01))
                 {
-                    if (splitter > 0 && splitter < 100)
-                        splitterList.Add(splitter);
+                    int splitter02;
+                    if (int.TryParse(mainWindow.splitterPersentage302.Text, out splitter02))
+                    {
+                        if (splitter01 < splitter02)
+                        {
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
+                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                        }
+                    }
                 }
-                else MessageBox.Show("Cannot parse value at 3st textBox. Value have to be int, less then 0" +
-                     "and greater then 0");
+                else MessageBox.Show(@"Cannot parse value at 3st textBox. Value have to be int, less then 0" +
+                     @"and greater then 0");
             }
             if (mainWindow.CheckBoxPersentage3.IsChecked == true)
             {
-                int splitter;
-                if (Int32.TryParse(mainWindow.splitterPersentage3.Text, out splitter))
+                int splitter01;
+                if (int.TryParse(mainWindow.splitterPersentage401.Text, out splitter01))
                 {
-                    if (splitter > 0 && splitter < 100)
-                        splitterList.Add(splitter);
+                    int splitter02;
+                    if (int.TryParse(mainWindow.splitterPersentage402.Text, out splitter02))
+                    {
+                        if (splitter01 < splitter02)
+                        {
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
+                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                        }
+                    }
                 }
-                else MessageBox.Show("Cannot parse value at 4st textBox. Value have to be int, less then 0" +
-                     "and greater then 0");
+                else MessageBox.Show(@"Cannot parse value at 4st textBox. Value have to be int, less then 0" +
+                     @"and greater then 0");
             }
 
-            return splitterList.ToArray();
+            return splitterList;
         }
     }
 }
