@@ -81,7 +81,7 @@
 				Height="446">
                 <Canvas Margin="0,221,0,-1">
 
-                    <Label x:Name="label" Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="115" Canvas.Top="-239" RenderTransformOrigin="0.5,0.5"/>
+                    <Label x:Name="label" Content="I" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="-239" RenderTransformOrigin="0.538,0.615"/>
 
                     <Button Height="23" HorizontalAlignment="Left"  x:Name="btnLoad" VerticalAlignment="Bottom" 
 						Width="85" Grid.Column="1" Click="btnLoad_Click" Canvas.Left="7" Canvas.Top="-76" Content="_Load"/>
@@ -95,19 +95,19 @@
                     <TextBox Height="22" x:Name="splitterPersentage302" Width="34" Canvas.Left="40" Canvas.Top="-160" Text="50" />
                     <TextBox Height="22" x:Name="splitterPersentage402" Width="34" Canvas.Left="40" Canvas.Top="-133" Text="25" />
                     <TextBox Height="22" x:Name="splitterBackage" Width="33" Canvas.Left="97" Canvas.Top="-106" Text="0" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-208" Height="16" x:Name="CheckBoxPersentage" Width="13" Content="" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-181" Height="16" x:Name="CheckBoxPersentage1" Width="13" Content="" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-154" Height="16" x:Name="CheckBoxPersentage2" Width="13" Content="" />
-                    <CheckBox Canvas.Left="97" Canvas.Top="-127" Height="16" x:Name="CheckBoxPersentage3" Width="13" Content="" />
-                    <CheckBox Canvas.Left="115" Canvas.Top="-208" Height="16" x:Name="CheckBoxInvisible" Width="13" Content="" />
-                    <CheckBox Canvas.Left="115" Canvas.Top="-181" Height="16" x:Name="CheckBoxInvisible1" Width="13" Content="" />
-                    <CheckBox Canvas.Left="115" Canvas.Top="-154" Height="16" x:Name="CheckBoxInvisible2" Width="13" Content="" />
-                    <CheckBox Canvas.Left="115" Canvas.Top="-127" Height="16" x:Name="CheckBoxInvisible3" Width="13" Content="" />
+                    <CheckBox Canvas.Left="128" Canvas.Top="-214" Height="16" x:Name="CheckBoxPersentage" Width="13" Content="" />
+                    <CheckBox Canvas.Left="128" Canvas.Top="-187" Height="16" x:Name="CheckBoxPersentage1" Width="13" Content="" />
+                    <CheckBox Canvas.Left="128" Canvas.Top="-160" Height="16" x:Name="CheckBoxPersentage2" Width="13" Content="" />
+                    <CheckBox Canvas.Left="128" Canvas.Top="-133" Height="16" x:Name="CheckBoxPersentage3" Width="13" Content="" />
+                    <CheckBox Canvas.Left="146" Canvas.Top="-214" Height="16" x:Name="CheckBoxInvisible" Width="13" Content="" />
+                    <CheckBox Canvas.Left="146" Canvas.Top="-187" Height="16" x:Name="CheckBoxInvisible1" Width="13" Content="" />
+                    <CheckBox Canvas.Left="146" Canvas.Top="-160" Height="16" x:Name="CheckBoxInvisible2" Width="13" Content="" />
+                    <CheckBox Canvas.Left="146" Canvas.Top="-133" Height="16" x:Name="CheckBoxInvisible3" Width="13" Content="" />
                     <AccessText Canvas.Left="1" Canvas.Top="-103" x:Name="TextIncision" Width="91" Height="22" Text="Incision length" />
-                    <xctk:ColorPicker Name="ColorPicker0" Canvas.Left="10" Canvas.Top="85" Height="20" Width="78"/>
-                    <xctk:ColorPicker x:Name="ColorPicker1" Canvas.Left="10" Canvas.Top="60" Height="20" Width="78"/>
-                    <xctk:ColorPicker x:Name="ColorPicker2" Canvas.Left="10" Canvas.Top="35" Height="20" Width="78"/>
-                    <xctk:ColorPicker x:Name="ColorPicker3" Canvas.Left="10" Canvas.Top="10" Height="20" Width="78"/>
+                    <xctk:ColorPicker Name="ColorPicker3" Canvas.Left="81" Canvas.Top="-133" Height="20" Width="31"/>
+                    <xctk:ColorPicker x:Name="ColorPicker2" Canvas.Left="81" Canvas.Top="-158" Height="20" Width="31"/>
+                    <xctk:ColorPicker x:Name="ColorPicker1" Canvas.Left="81" Canvas.Top="-187" Height="20" Width="31"/>
+                    <xctk:ColorPicker x:Name="ColorPicker0" Canvas.Left="81" Canvas.Top="-212" Height="20" Width="31"/>
                 </Canvas>
             </GroupBox>
         </Canvas>

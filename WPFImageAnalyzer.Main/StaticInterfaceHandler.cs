@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPFChart3D;
-using System.Windows.Forms;
+using Xceed.Wpf.Toolkit;
+using MessageBox = System.Windows.Forms.MessageBox;
+using SysDrawing = System.Drawing;
 
 namespace WPFImageAnalyzer
 {
     public static class StaticInterfaceHandler
     {
-        public static List<Tuple<int, int>> GetSplitterArray(MainWindow mainWindow)
+        public static List<RangeObject> GetSplitterArray(MainWindow mainWindow)
         {
-            var splitterList = new List<Tuple<int,int>>();
+            var splitterList = new List<RangeObject>();
 
             if (mainWindow.CheckBoxPersentage.IsChecked == true)
             {
@@ -22,10 +24,18 @@ namespace WPFImageAnalyzer
                     int splitter02;
                     if (int.TryParse(mainWindow.splitterPersentage102.Text, out splitter02))
                     {
+                        if(mainWindow.ColorPicker0.SelectedColor != null)
                         if (splitter01 < splitter02)
                         {
-                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
-                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 <= 100)
+                                splitterList.Add(new RangeObject
+                                {
+                                    PersentFrom = splitter01, PersentTo = splitter02,
+                                    Color = SysDrawing.Color.FromArgb(
+                                    mainWindow.ColorPicker0.SelectedColor.Value.R,
+                                    mainWindow.ColorPicker0.SelectedColor.Value.G,
+                                    mainWindow.ColorPicker0.SelectedColor.Value.B)
+                                });
                         }
                     }
                 }
@@ -40,10 +50,18 @@ namespace WPFImageAnalyzer
                     int splitter02;
                     if (int.TryParse(mainWindow.splitterPersentage202.Text, out splitter02))
                     {
-                        if (splitter01 < splitter02)
+                        if (mainWindow.ColorPicker1.SelectedColor != null)
+                            if (splitter01 < splitter02)
                         {
-                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
-                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 <= 100)
+                                splitterList.Add(new RangeObject
+                                {
+                                    PersentFrom = splitter01, PersentTo = splitter02,
+                                    Color = SysDrawing.Color.FromArgb(
+                                    mainWindow.ColorPicker1.SelectedColor.Value.R,
+                                    mainWindow.ColorPicker1.SelectedColor.Value.G,
+                                    mainWindow.ColorPicker1.SelectedColor.Value.B)
+                                });
                         }
                     }
                 }
@@ -58,10 +76,18 @@ namespace WPFImageAnalyzer
                     int splitter02;
                     if (int.TryParse(mainWindow.splitterPersentage302.Text, out splitter02))
                     {
-                        if (splitter01 < splitter02)
+                        if (mainWindow.ColorPicker2.SelectedColor != null)
+                            if (splitter01 < splitter02)
                         {
-                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
-                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 <= 100)
+                                splitterList.Add(new RangeObject
+                                {
+                                    PersentFrom = splitter01, PersentTo = splitter02,
+                                    Color = SysDrawing.Color.FromArgb(
+                                    mainWindow.ColorPicker2.SelectedColor.Value.R,
+                                    mainWindow.ColorPicker2.SelectedColor.Value.G,
+                                    mainWindow.ColorPicker2.SelectedColor.Value.B)
+                            });
                         }
                     }
                 }
@@ -76,10 +102,18 @@ namespace WPFImageAnalyzer
                     int splitter02;
                     if (int.TryParse(mainWindow.splitterPersentage402.Text, out splitter02))
                     {
-                        if (splitter01 < splitter02)
+                        if (mainWindow.ColorPicker3.SelectedColor != null)
+                            if (splitter01 < splitter02)
                         {
-                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 < 100)
-                                splitterList.Add(new Tuple<int, int>(splitter01, splitter02));
+                            if (splitter01 > 0 && splitter01 < 100 && splitter02 > 0 && splitter02 <= 100)
+                                splitterList.Add(new RangeObject
+                                {
+                                    PersentFrom = splitter01, PersentTo = splitter02,
+                                    Color = SysDrawing.Color.FromArgb(
+                                    mainWindow.ColorPicker3.SelectedColor.Value.R,
+                                    mainWindow.ColorPicker3.SelectedColor.Value.G,
+                                    mainWindow.ColorPicker3.SelectedColor.Value.B)
+                                });
                         }
                     }
                 }

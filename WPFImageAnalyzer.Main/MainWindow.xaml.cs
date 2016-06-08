@@ -321,40 +321,15 @@ namespace WPFChart3D
             
             for (var i = 0; i < diffs.Count; i++)
             {
-                var diff = diffs[i];
-                float maxDiff;
-                if (i == 0)
-                    maxDiff = zArray.Max();
-                else
-                    maxDiff = diffs[i-1].Item2 + diff.Item2;
-                const int lowSensivity = 0;
-                var highSensivity = maxDiff - diff.Item2;
-                
-                rgbCortage.RegisterNewContainer(GetBordersLine(zArray, rgbList, diff.Item1, diff.Item2));
+                rgbCortage.RegisterNewContainer(GetBordersLine(zArray, rgbList, diffs[i].From, diffs[i].To,
+                    new Color() {A =  diffs[i].Color.A, R = diffs[i].Color.R, G= diffs[i].Color.G, B = diffs[i].Color.B}));
             }
 
             foreach (var container in rgbCortage.Container)
             {
                 foreach (var rad in container)
                 {
-                    rad.SelectedIndex = 1;
-                    var color = new Color();
-                    if (container.Equals(rgbCortage.Container[0]))
-                    {
-                        if (ColorPicker0.SelectedColor != null) color = (Color)ColorPicker0.SelectedColor;
-                    }
-                    else if (container.Equals(rgbCortage.Container[1]))
-                    {
-                        if (ColorPicker1.SelectedColor != null) color = (Color)ColorPicker1.SelectedColor;
-                    }
-                    else if (container.Equals(rgbCortage.Container[2]))
-                    {
-                        if (ColorPicker2.SelectedColor != null) color = (Color) ColorPicker2.SelectedColor;
-                    }
-                    else if (container.Equals(rgbCortage.Container[3]))
-                    {
-                        if (ColorPicker3.SelectedColor != null) color = (Color) ColorPicker3.SelectedColor;
-                    }
+
 
                     var plotItem = new ScatterPlotItem
                     {
@@ -364,7 +339,7 @@ namespace WPFChart3D
                         y = (float) rad.Y,
                         z = (float) rad.Z - 500,
                         shape = (int) Chart3D.Shape.Cylinder,
-                        color = color
+                        color = Color.FromArgb(rad.A, rad.R, rad.G, rad.B)
                     };
                     ((ScatterChart3D)_m_3DChart).SetVertex(rad.Possition, plotItem);
                 }
@@ -473,20 +448,24 @@ namespace WPFChart3D
         private static IEnumerable<Rgb> GetBordersLine(
             IReadOnlyList<float> zArray, 
             IReadOnlyList<Rgb> rgbList, 
-            float lowBorder,
-            float highBorder)
+            float @from,
+            float to,
+            Color color)
         {
             var radgisticList = new List<Rgb>();
             
             for (var i = 0; i < zArray.Count; i++)
             {
-                if (zArray[i] > lowBorder && zArray[i] < highBorder)
+                if (zArray[i] > @from && zArray[i] < to)
                 {
                     radgisticList.Add(new Rgb(
                         rgbList[i].A,
-                        rgbList[i].R,
-                        rgbList[i].G,
-                        rgbList[i].B,
+                        color.R,
+                        color.G,
+                        color.B,
+                    //    rgbList[i].R,
+                    //    rgbList[i].G,
+                    //    rgbList[i].B,
                         rgbList[i].X,
                         rgbList[i].Y,
                         zArray[i],
@@ -496,17 +475,14 @@ namespace WPFChart3D
             return radgisticList;
         }
         
-        private static List<Tuple<float, float>> ToDiffArray(List<Tuple<int, int>> percentageArray, float percent)
+        private static List<RangeObject> ToDiffArray(List<RangeObject> percentageArray, float percent)
         {
-            var diffArray = new List<Tuple<float, float>>(percentageArray.Count);
-
-            foreach (Tuple<int, int> t in percentageArray)
+            foreach (var t in percentageArray)
             {
-                diffArray.Add(new Tuple<float, float>(percent * t.Item1,
-                    percent * t.Item2));
+                t.From = percent*t.PersentFrom;
+                t.To = percent*t.PersentTo;
             }
-#warning Array.Sort(diffArray);
-            return diffArray;
+            return percentageArray;
         }
 
         private void scatterAllImageButton_Click(object sender, RoutedEventArgs e)
@@ -539,96 +515,6 @@ namespace WPFChart3D
                 DrawScatterPlot(rgbList);
             }
             GC.Collect();
-        }
-
-        private static float[] SortByDiffs(float[] zArray, List<Tuple<float, float>> diffs, int breakage, IReadOnlyList<bool> invisible)
-        {
-            for (var i = 0; i < zArray.Length; i++)//:((
-            {
-                if (diffs.Count == 1)
-                {
-                    if (zArray[i] > diffs[0].Item1 && zArray[i] <= diffs[0].Item2)
-                    {
-                        if(invisible[0])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                }
-                if (diffs.Count == 2)
-                {
-                    if (zArray[i] > diffs[0].Item1 && zArray[i] <= diffs[0].Item2)
-                    {
-                        if(invisible[0])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                    if (zArray[i] > diffs[1].Item1 && zArray[i] <= diffs[1].Item2)
-                    {
-                        if(invisible[1])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                }
-                if (diffs.Count == 3)
-                {
-                    if (zArray[i] > diffs[0].Item1 && zArray[i] <= diffs[0].Item2)
-                    {
-                        if(invisible[0])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                    if (zArray[i] > diffs[1].Item1 && zArray[i] <= diffs[1].Item2)
-                    {
-                        if(invisible[1])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                    if (zArray[i] > diffs[2].Item1 && zArray[i] <= diffs[2].Item2)
-                    {
-                        if (invisible[2])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                }
-                if (diffs.Count == 4)
-                {
-                    if (zArray[i] > diffs[0].Item1 && zArray[i] <= diffs[0].Item2)
-                    {
-                        if(invisible[0])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                    if (zArray[i] > diffs[1].Item1 && zArray[i] <= diffs[1].Item2)
-                    {
-                        if (invisible[1])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                    if (zArray[i] > diffs[2].Item1 && zArray[i] <= diffs[2].Item2)
-                    {
-                        if (invisible[2])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                    if (zArray[i] > diffs[3].Item1 && zArray[i] <= diffs[3].Item2)
-                    {
-                        if (invisible[3])
-                            zArray[i] = 0;
-                        else
-                            zArray[i] = zArray[i] + breakage;
-                    }
-                }
-            }
-            return zArray;
         }
     }
 }
